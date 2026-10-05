@@ -1,0 +1,30 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "equipment",
+ "pattern": [
+  "AEA",
+  "BDB",
+  "L L"
+ ],
+ "key": {
+  "A": {
+   "item": "minecraft:amethyst_shard"
+  },
+  "E": {
+   "item": "minecraft:ender_eye"
+  },
+  "B": {
+   "item": "minecraft:blaze_rod"
+  },
+  "D": {
+   "item": "minecraft:diamond"
+  },
+  "L": {
+   "item": "minecraft:leather"
+  }
+ },
+ "result": {
+  "item": "railgun:cursed_fists",
+  "count": 1
+ }
+}
