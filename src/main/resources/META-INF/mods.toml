@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="railgun"
+version="1.0.0"
+displayName="Rail Gun and Powers"
+description='''Rail gun, flame glove, domains, Hollow Purple and the Ultimate Mech Beam, with custom particle effects.'''
+
+[[dependencies.railgun]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.railgun]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"
+
+# Optional: Photon (VFX editor). Your own .fx files are played through it when it is installed.
+[[dependencies.railgun]]
+modId="photon"
+mandatory=false
+versionRange="[0,)"
+ordering="AFTER"
+side="BOTH"
