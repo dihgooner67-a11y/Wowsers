@@ -1,0 +1,24 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "equipment",
+ "pattern": [
+  "OEO",
+  "ESE",
+  "OEO"
+ ],
+ "key": {
+  "O": {
+   "item": "minecraft:obsidian"
+  },
+  "E": {
+   "item": "minecraft:ender_eye"
+  },
+  "S": {
+   "item": "minecraft:nether_star"
+  }
+ },
+ "result": {
+  "item": "railgun:infinite_void",
+  "count": 1
+ }
+}
