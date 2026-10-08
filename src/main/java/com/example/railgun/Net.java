@@ -18,6 +18,10 @@ public final class Net {
         CH.registerMessage(0, FxPacket.class, FxPacket::encode, FxPacket::decode, FxPacket::handle);
     }
 
+    public static void sendTo(net.minecraft.server.level.ServerPlayer p, FxPacket pkt) {
+        CH.send(PacketDistributor.PLAYER.with(() -> p), pkt);
+    }
+
     public static void sendNear(ServerLevel level, Vec3 at, double radius, FxPacket p) {
         CH.send(PacketDistributor.NEAR.with(() ->
                 new PacketDistributor.TargetPoint(at.x, at.y, at.z, radius, level.dimension())), p);

@@ -29,6 +29,8 @@ public final class ClientEvents {
     /** After the world (and every particle) is drawn: run the impact filter, lens and bloom on what you see. */
     @SubscribeEvent
     public static void stage(RenderLevelStageEvent e) {
+        if (e.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS)
+            RealmFx.renderPuddles(e.getPoseStack(), e.getCamera(), e.getPartialTick());
         if (e.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) ClientFx.frame(e.getPartialTick(), e.getCamera());
     }
 

@@ -13,5 +13,6 @@ Cursed Fists  : cursed_black_flash, cursed_kill, cursed_surge
 Fuga          : fuga_launch, fuga_full, fuga_impact
 Dismantle     : dismantle
 Cleave        : cleave
+Cursed Realm  : cursed_realm_enter, cursed_realm_leave
 Other         : rail_muzzle, rail_impact, black_flash, domain_pocket, domain_shrine, domain_void, domain_hometown
 Missing files are skipped. If effects face the wrong way flip YAW_SIGN / PITCH_SIGN in PhotonBridge.java.

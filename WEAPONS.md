@@ -40,3 +40,14 @@ Right-click while a mob is TOUCHING you (otherwise it tells you it needs one). F
 red rims and solid red/black cuts) tears the mob and every mob within 6 blocks (28 damage every half second, 140 finale), pins the target,
 and nicks the ground. Multiple LONG impact frames cover the whole attack: ~0.35 s each, alternating black screen with red glowing
 outlines and red screen with black outlines, each with a fresh storm of small black and solid-red cuts. 40 s cooldown.
+
+## Cursed Realm  (/give @s railgun:cursed_realm)
+A real dimension (railgun:cursed_realm): a flat black plain under a red sky. Defined in data/railgun/dimension*, worldgen/biome.
+- Right-click: a shadow puddle opens under you, you sink into it, and you fall (slow-falling, no damage) into the realm at the same
+  x/z. Inside: red rain, red lightning (visual) with thunder, drifting ash, a red vignette, and the impact-frame screen filter
+  (red outlines on black) permanently on; it flashes to the negative on each lightning strike.
+- NO mobs: biome has no spawns, EntityJoinLevelEvent cancels every Mob, and a sweep removes any that slip in.
+- In the normal world a shadow puddle (a real flat quad on the ground, with smoke and embers) glides along the ground at your
+  matching coordinates for everyone nearby to see.
+- Right-click again inside to leave at any time (puddle sinks you back to where you entered). Going back in is locked for 30 s after
+  you return (constants SINK_TICKS / LOCK_TICKS in CursedRealm.java). Death or logging out cleans the session up.

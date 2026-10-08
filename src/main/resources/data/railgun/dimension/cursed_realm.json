@@ -1,0 +1,18 @@
+{
+  "type": "railgun:cursed_realm",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "railgun:cursed_realm",
+      "features": false,
+      "lakes": false,
+      "layers": [
+        { "block": "minecraft:bedrock", "height": 1 },
+        { "block": "minecraft:deepslate", "height": 8 },
+        { "block": "minecraft:blackstone", "height": 3 },
+        { "block": "minecraft:polished_blackstone", "height": 1 }
+      ],
+      "structure_overrides": []
+    }
+  }
+}

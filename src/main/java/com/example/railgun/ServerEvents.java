@@ -19,6 +19,7 @@ public final class ServerEvents {
         Fuga.tick();
         Slashes.tick();
         Cleaves.tick();
+        CursedRealm.tick(e.getServer());
     }
 
     @SubscribeEvent
@@ -30,5 +31,6 @@ public final class ServerEvents {
         Fuga.clear();
         Slashes.clear();
         Cleaves.clear();
+        CursedRealm.clear();
     }
 }

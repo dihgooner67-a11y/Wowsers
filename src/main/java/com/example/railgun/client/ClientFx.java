@@ -22,6 +22,7 @@ public final class ClientFx {
             case FxPacket.CURSED -> CursedFx.onPacket(p, mc);
             case FxPacket.FUGA -> FugaFx.onPacket(p, mc);
             case FxPacket.SLASH -> SlashFx.onPacket(p, mc);
+            case FxPacket.REALM -> RealmFx.onPacket(p, mc);
             default -> { }
         }
     }
@@ -41,11 +42,13 @@ public final class ClientFx {
         CursedFx.tick(mc);
         FugaFx.tick(mc);
         SlashFx.tick(mc);
+        RealmFx.tick(mc);
     }
 
     public static void frame(float pt, Camera camera) {
         BlackHoleFx.frame(pt, camera);
         Impact.frame(pt);
+        RealmFx.frame(pt);
         PostFx.render(pt);
     }
 
@@ -59,5 +62,6 @@ public final class ClientFx {
         MechFx.hud(g, w, h);
         CursedFx.hud(g, w, h);
         FugaFx.hud(g, w, h);
+        RealmFx.hud(g, w, h);
     }
 }

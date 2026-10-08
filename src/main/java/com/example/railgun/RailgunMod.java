@@ -52,6 +52,8 @@ public class RailgunMod {
     public static final RegistryObject<Item> DISMANTLE = ITEMS.register("dismantle", () -> new DismantleItem(epic()));
     public static final RegistryObject<Item> CLEAVE = ITEMS.register("cleave", () -> new CleaveItem(epic()));
 
+    public static final RegistryObject<Item> CURSED_REALM = ITEMS.register("cursed_realm", () -> new CursedRealmItem(epic()));
+
     public RailgunMod() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ITEMS.register(bus);
@@ -65,7 +67,7 @@ public class RailgunMod {
         if (e.getTabKey() == CreativeModeTabs.COMBAT) {
             e.accept(RAILGUN); e.accept(FLAME_GLOVE); e.accept(HOLLOW_PURPLE); e.accept(MECH_BEAM);
             e.accept(VOID_ECLIPSE); e.accept(MALEVOLENT_SHRINE); e.accept(INFINITE_VOID); e.accept(HOMETOWN_MEMORIES);
-            e.accept(BLACK_HOLE); e.accept(CURSED_FISTS); e.accept(FUGA); e.accept(DISMANTLE); e.accept(CLEAVE);
+            e.accept(BLACK_HOLE); e.accept(CURSED_FISTS); e.accept(FUGA); e.accept(DISMANTLE); e.accept(CLEAVE); e.accept(CURSED_REALM);
         }
     }
 }

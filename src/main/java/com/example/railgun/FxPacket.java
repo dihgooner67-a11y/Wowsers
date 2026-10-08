@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 /** One generic server -> client effect packet. kind selects the power, arg/owner/vectors carry its data. */
 public class FxPacket {
-    public static final int RAIL = 1, DOMAIN = 2, GLOVE = 3, PURPLE = 4, MECH = 5, BLACKHOLE = 6, CURSED = 7, FUGA = 8, SLASH = 9;
+    public static final int RAIL = 1, DOMAIN = 2, GLOVE = 3, PURPLE = 4, MECH = 5, BLACKHOLE = 6, CURSED = 7, FUGA = 8, SLASH = 9, REALM = 10;
 
     public final int kind, arg, owner;
     public final double x, y, z, dx, dy, dz;
