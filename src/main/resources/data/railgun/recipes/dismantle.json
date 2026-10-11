@@ -1,0 +1,24 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "equipment",
+ "pattern": [
+  "SOS",
+  "ONO",
+  "SOS"
+ ],
+ "key": {
+  "S": {
+   "item": "minecraft:diamond_sword"
+  },
+  "O": {
+   "item": "minecraft:obsidian"
+  },
+  "N": {
+   "item": "minecraft:nether_star"
+  }
+ },
+ "result": {
+  "item": "railgun:dismantle",
+  "count": 1
+ }
+}

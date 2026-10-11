@@ -1,0 +1,24 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "equipment",
+ "pattern": [
+  "RSR",
+  "SNS",
+  "RSR"
+ ],
+ "key": {
+  "R": {
+   "item": "minecraft:redstone_block"
+  },
+  "S": {
+   "item": "minecraft:diamond_sword"
+  },
+  "N": {
+   "item": "minecraft:nether_star"
+  }
+ },
+ "result": {
+  "item": "railgun:cleave",
+  "count": 1
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "parent": "item/generated",
+ "textures": {
+  "layer0": "railgun:item/puddle_dive"
+ },
+ "display": {
+  "firstperson_righthand": {
+   "scale": [
+    0.001,
+    0.001,
+    0.001
+   ]
+  },
+  "firstperson_lefthand": {
+   "scale": [
+    0.001,
+    0.001,
+    0.001
+   ]
+  },
+  "thirdperson_righthand": {
+   "scale": [
+    0.001,
+    0.001,
+    0.001
+   ]
+  },
+  "thirdperson_lefthand": {
+   "scale": [
+    0.001,
+    0.001,
+    0.001
+   ]
+  }
+ },
+ "overrides": [
+  {
+   "predicate": {
+    "railgun:ink_color": 1
+   },
+   "model": "railgun:item/puddle_dive_1"
+  },
+  {
+   "predicate": {
+    "railgun:ink_color": 2
+   },
+   "model": "railgun:item/puddle_dive_2"
+  },
+  {
+   "predicate": {
+    "railgun:ink_color": 3
+   },
+   "model": "railgun:item/puddle_dive_3"
+  },
+  {
+   "predicate": {
+    "railgun:ink_color": 4
+   },
+   "model": "railgun:item/puddle_dive_4"
+  }
+ ]
+}

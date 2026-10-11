@@ -1,0 +1,24 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "equipment",
+ "pattern": [
+  "FBF",
+  "BNB",
+  "FBF"
+ ],
+ "key": {
+  "F": {
+   "item": "minecraft:fire_charge"
+  },
+  "B": {
+   "item": "minecraft:blaze_rod"
+  },
+  "N": {
+   "item": "minecraft:nether_star"
+  }
+ },
+ "result": {
+  "item": "railgun:fuga_open_flame",
+  "count": 1
+ }
+}

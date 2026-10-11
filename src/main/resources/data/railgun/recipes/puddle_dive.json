@@ -1,0 +1,36 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "equipment",
+ "pattern": [
+  "RLG",
+  "KIW",
+  " N "
+ ],
+ "key": {
+  "R": {
+   "item": "minecraft:red_dye"
+  },
+  "L": {
+   "item": "minecraft:lapis_lazuli"
+  },
+  "G": {
+   "item": "minecraft:green_dye"
+  },
+  "K": {
+   "item": "minecraft:black_dye"
+  },
+  "I": {
+   "item": "minecraft:ink_sac"
+  },
+  "W": {
+   "item": "minecraft:white_dye"
+  },
+  "N": {
+   "item": "minecraft:nether_star"
+  }
+ },
+ "result": {
+  "item": "railgun:puddle_dive",
+  "count": 1
+ }
+}
