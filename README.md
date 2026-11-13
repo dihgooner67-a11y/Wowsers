@@ -6,7 +6,7 @@ Work in progress. **Nothing here has been built or run in Minecraft yet** (no Fo
 ## Easiest way: let GitHub build it (no installs)
 1. Create a **private** GitHub repo and upload everything in this folder (not the big jars).
 2. The Continuum jar is ~71 MB, too big for the website's file upload. Instead: repo -> **Releases** -> **Create a new release**,
-   tag it exactly `libs`, drag in `hbm-1.0.5.jar` (your `hbm-forge-1_0_5-1_20_1.jar`, renamed) and `golemcore-1.0.5.jar`, then **Publish release**.
+   tag it exactly `libs`, drag in your Continuum jar and the Golem Core jar (any file names starting with `hbm` and `golemcore` work), then **Publish release**.
    Keep the repo private: those jars belong to their authors.
 3. **Actions** -> **Build** -> **Run workflow**. When it finishes, download `cursed-continuum-jar` from the run page.
 4. If it fails, copy the red error lines from the failed step and send them to me.

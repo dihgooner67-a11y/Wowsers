@@ -21,7 +21,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p libs
-          gh release download libs --repo "${{ github.repository }}" --dir libs --pattern '*.jar' --clobber || echo "No release tagged libs found"
+          gh release download libs --repo "${{ github.repository }}" --dir libs --pattern '*.jar' --clobber
+          ls -la libs
+          [ -f libs/hbm-1.0.5.jar ] || cp "$(ls libs/hbm*.jar | head -n1)" libs/hbm-1.0.5.jar
+          [ -f libs/golemcore-1.0.5.jar ] || cp "$(ls libs/golemcore*.jar | head -n1)" libs/golemcore-1.0.5.jar
           ls -la libs
       - name: Check libs
         run: |
