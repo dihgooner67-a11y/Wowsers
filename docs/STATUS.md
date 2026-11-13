@@ -12,18 +12,22 @@ EMBER (v0.1)     WRITTEN (untested in game)
   NOT yet: jammer (field disturber) logic, final-phase sequence, screen shake/flash,
   looped overload sound, spinning-ring/light client rendering, new GUI readouts
 
-HALO (v0.2)      PARTIAL = "HALO-B"
-  DONE (written, untested):
-  - Receiver <-> core linking (beam passes core, next receiver becomes absorber)
-  - Stabilizer: addon power demand (watts^5 * drain), lens field/energy modifiers, 1e13 buffer
-  - 5 addon lenses (blank, limiter, booster, omega, safe) with models/textures/lang
-  - Crucifix + DFC fix tool as items (tooltips only; behaviour needs collapse logic)
-  TODO (HALO-C):
-  - Emitter changes (coolant, SPK output), injector changes
-  - Receiver level / destruction, shrapnel entity
-  - Jammer + collapse sequence, crucifix/fix-tool behaviour, final phase
-  - New blocks: exchanger, core emitter (cemitter), pulser/detonator, osmiridium block
-  - GUIs, particles, core/component renderers, sounds
+HALO (v0.2)      IN PROGRESS = "HALO-C1" (build of HALO-A/B confirmed compiling on GitHub; not run in game yet)
+  DONE (written):
+  - Receiver <-> core linking; receiver "level" (default 1.0, saved) and destruction
+    (>= 1e11 joules/tick builds damage, then 1%/tick explosion)
+  - Stabilizer: watts^5 * drain, lens field/energy modifiers, 1e13 buffer
+  - 5 addon lenses; crucifix + fix tool items
+  - Overload countdown (120 ticks) -> blast sized 20 + temp^0.4, or, if a Field Disturber is in range,
+    120 s collapse with final phase at 15 s (receivers explode, no payout), then blast
+  - Crucifix / fix tool thrown into a collapsing core (survival 80% fail - 10% per stabilizer;
+    always fails in final phase or while a beam is boosting)
+  TODO (HALO-C2):
+  - Collapse side effects: pulling entities/blocks in, vaporization/heat damage around the core
+  - Client: screen shake, DFC blast particles, rings/lights, looped sounds, GUI readouts
+  - Receiver level slider (GUI) and wrong-side beam explosion
+  - Emitter extras (beam burns blocks/entities), injector extras (sounds/control events)
+  - New blocks: exchanger, core emitter (cemitter), pulser/detonator, osmiridium block, shrapnel entity
   - AMS rework (powercores/ams: base, emitter, stabilizer blocks)
 
 CINDER (v0.3)    PLANNED, see docs/CINDER_PLAN.md   (reactors: ZIRNOX, RBMK, APR, LFTR, PWR)

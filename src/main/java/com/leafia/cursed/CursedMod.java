@@ -19,6 +19,7 @@ public class CursedMod {
     public CursedMod() {
         var modBus = FMLJavaModLoadingContext.get().getModEventBus();
         CursedItems.ITEMS.register(modBus);
+        CursedSounds.SOUNDS.register(modBus);
         modBus.addListener(this::creativeTabs);
         MinecraftForge.EVENT_BUS.register(this);
     }

@@ -7,6 +7,12 @@ public final class DfcTuning {
     public static final double SPK_PER_JOULE = 1.0E-6;
     public static final int DEFAULT_MELTING_POINT = 2250;
     public static final int OVERLOAD_TICKS = 120;
+    /** ASSUMPTION: Continuum has no jam logic, so a Field Disturber block within this many chunks of the core counts as a jammer. */
+    public static final int JAMMER_RANGE_CHUNKS = 8;
+    public static final double COLLAPSE_SECONDS = 120.0, FINAL_PHASE_SECONDS = 15.0;
+    /** Addon blast radius is 20 + temperature^0.4; capped for safety. */
+    public static final int MAX_BLAST = 250;
+    public static final int CRUCIFIX_BASE_FAIL = 80, CRUCIFIX_FAIL_PER_STABILIZER = 10;
     public static final double TIME_TO_MELTDOWN = 10.0, TIME_TO_REGEN = 30.0;
     public static final int CATALYST_FALLBACK_MELT = 1_500_000;
 

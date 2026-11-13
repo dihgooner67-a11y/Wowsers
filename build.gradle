@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.leafia.cursed'
-version = '0.2.1-halo-b'
+version = '0.2.2-halo-c1'
 base { archivesName = 'cursed-continuum' }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)

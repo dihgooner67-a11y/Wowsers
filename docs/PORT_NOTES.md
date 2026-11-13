@@ -13,7 +13,9 @@
 1. Stabilization now comes from lens modifiers (fieldMod * watts/100 per stabilizer), as in the addon. Headless sim: stabilization 0 overheats and melts catalysts, >= 2 is stable. Continuum's own `core.field` is no longer used by the simulation.
 2. Absorber "level" is fixed at 1.0 until HALO-B.
 3. Catalyst wear uses NBT key "damage" on the catalyst stack.
-4. Overload explosion uses Continuum's detonate() size (fill-based), not the addon's temperature-based radius.
+4. Overload blast uses the addon's radius (20 + temperature^0.4), capped at DfcTuning.MAX_BLAST = 250, with Continuum's MK5 explosion and rainbow cloud.
+4b. Continuum has no jammer logic, so ANY Field Disturber block within 8 chunks of the core counts as a jammer (DfcTuning.JAMMER_RANGE_CHUNKS). The addon used HBM CE's own jam check.
+4c. An in-progress collapse is not saved: reloading the world resets the countdown.
 5. Shocks damage entities in a radius with Continuum's amsCore damage source (addon spawned bolt entities).
 
 ## Likely first build errors
