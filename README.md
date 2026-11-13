@@ -3,7 +3,14 @@
 Port of Leafia's *Cursed Addon* (1.12.2) onto [NTM - Continuum](https://github.com/Warfactory-Official/NTM-Continuum) 1.0.5.
 Work in progress. **Nothing here has been built or run in Minecraft yet** (no Forge toolchain was available when it was written).
 
-## Setup
+## Easiest way: let GitHub build it (no installs)
+1. Create a **private** GitHub repo and upload everything in this folder.
+2. Upload `hbm-1.0.5.jar` (your `hbm-forge-1_0_5-1_20_1.jar`, renamed) and `golemcore-1.0.5.jar` into the `libs/` folder in the repo.
+   Keep the repo private: those jars belong to their authors.
+3. Open the **Actions** tab -> **Build** -> **Run workflow**. When it finishes, download `cursed-continuum-jar` from the run page.
+4. If it fails, open the failed step, copy the red error lines and send them to me.
+
+## Local setup (optional)
 1. Install JDK 17 and Gradle 8.x, then run `gradle wrapper` once in this folder.
 2. Put these in `libs/` (names matter, they are resolved as local deps):
    - `hbm-1.0.5.jar`  (rename your `hbm-forge-1_0_5-1_20_1.jar`)
