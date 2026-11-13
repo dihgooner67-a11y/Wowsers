@@ -1,21 +1,49 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'java'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
-version = mod_version
-group = 'com.example.railgun'
-base { archivesName = 'railgun-dev' }
+group = 'com.leafia.cursed'
+version = '0.2.0-halo-a'
+base { archivesName = 'cursed-continuum' }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: minecraft_version
+    mappings channel: 'official', version: '1.20.1'
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            mods { cursed { source sourceSets.main } }
+        }
+        client {}
+        server { args '--nogui' }
+    }
+}
+
+mixin {
+    add sourceSets.main, 'cursed.refmap.json'
+    config 'cursed.mixins.json'
+}
+
+repositories {
+    // Put hbm-1.0.5.jar and golemcore-1.0.5.jar in ./libs (see README)
+    flatDir { dir 'libs' }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    minecraft 'net.minecraftforge:forge:1.20.1-47.3.0'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation fg.deobf('local:hbm:1.0.5')
+    implementation fg.deobf('local:golemcore:1.0.5')
 }
 
-tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
-
-jar.finalizedBy('reobfJar')
+jar {
+    manifest {
+        attributes('MixinConfigs': 'cursed.mixins.json')
+    }
+    finalizedBy 'reobfJar'
+}
