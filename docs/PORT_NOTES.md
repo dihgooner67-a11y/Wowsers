@@ -6,11 +6,11 @@
 | Mixin into HBM CE TileEntityCore (1667 lines) | CoreMixin + DfcCoreSim (pure math) |
 | Emitter adds SPK to core directly | core.burn() hook accumulates beam joules * 1e-6 |
 | Core finds absorbers itself | BeamContext + ReceiverMixin: receiver hit right after the core links itself |
-| Stabilizer raises "stabilization" | Stabilizer already writes core.field (0..100); scaled by DfcTuning.STABILIZATION_PER_FIELD |
+| Stabilizer + lens | StabilizerMixin settles watts^5*drain and calls core.cursed$stabilize(); 5 lenses registered in CursedItems |
 | Catalyst melt table (LCEItemCatalyst) | DfcTuning.meltingPoint(), same values, keyed by registry path (names match Continuum) |
 
 ## Assumptions that need in-game checking
-1. STABILIZATION_PER_FIELD = 0.1 (field 0..100 -> stabilization 0..10). Headless sim: stab 0 overheats and melts catalysts, stab >= 2 is stable.
+1. Stabilization now comes from lens modifiers (fieldMod * watts/100 per stabilizer), as in the addon. Headless sim: stabilization 0 overheats and melts catalysts, >= 2 is stable. Continuum's own `core.field` is no longer used by the simulation.
 2. Absorber "level" is fixed at 1.0 until HALO-B.
 3. Catalyst wear uses NBT key "damage" on the catalyst stack.
 4. Overload explosion uses Continuum's detonate() size (fill-based), not the addon's temperature-based radius.
@@ -23,3 +23,8 @@
 
 ## Testing the math without Minecraft
 `java tools/SimCheck.java` runs the simulation headless with a Continuum-scale emitter beam.
+
+## Continuum facts learned
+- Item wear uses Continuum's data-component wrapper (`ItemLens.get/setLensDamage`), not plain NBT. Catalyst wear still writes NBT key "damage" (ASSUMPTION: Continuum's ItemCatalyst has no wear of its own, so nothing conflicts; check in game).
+- Continuum ships a single stabilizer lens (`ams_lens`); the addon's five lenses are new items here. `ams_lens` is treated as modifiers 1/1/1.
+- Mixin targets in Continuum: stabilizer `lens()` is private and shadowed as protected abstract.

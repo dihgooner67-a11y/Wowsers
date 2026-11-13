@@ -4,6 +4,6 @@
   "package": "com.leafia.cursed.mixin",
   "refmap": "cursed.refmap.json",
   "compatibilityLevel": "JAVA_17",
-  "mixins": ["CoreMixin", "ReceiverMixin", "EmitterMixin"],
+  "mixins": ["CoreMixin", "ReceiverMixin", "EmitterMixin", "StabilizerMixin"],
   "injectors": { "defaultRequire": 1 }
 }

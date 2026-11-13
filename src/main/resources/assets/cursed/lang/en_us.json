@@ -1,1 +1,9 @@
-{ "mod.cursed.name": "NTM Cursed Edition" }
+{
+  "item.cursed.ams_focus_blank": "Blank Focus Lens",
+  "item.cursed.ams_focus_limiter": "Limiter Focus Lens",
+  "item.cursed.ams_focus_booster": "Booster Focus Lens",
+  "item.cursed.ams_focus_omega": "Omega Focus Lens",
+  "item.cursed.ams_focus_safe": "Safe Focus Lens",
+  "item.cursed.crucifix": "Crucifix",
+  "item.cursed.fix_tool": "DFC Fix Tool"
+}

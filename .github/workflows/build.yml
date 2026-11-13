@@ -2,7 +2,7 @@ name: Build
 on:
   push:
   pull_request:
-  workflow_dispatch:   # lets you press "Run workflow" by hand
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,11 +16,17 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.8
+      - name: Get dependency jars from the "libs" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p libs
+          gh release download libs --repo "${{ github.repository }}" --dir libs --pattern '*.jar' --clobber || echo "No release tagged libs found"
+          ls -la libs
       - name: Check libs
         run: |
-          ls -la libs
-          test -f libs/hbm-1.0.5.jar || (echo "Missing libs/hbm-1.0.5.jar" && exit 1)
-          test -f libs/golemcore-1.0.5.jar || (echo "Missing libs/golemcore-1.0.5.jar" && exit 1)
+          test -f libs/hbm-1.0.5.jar || (echo "Missing libs/hbm-1.0.5.jar (attach it to the libs release)" && exit 1)
+          test -f libs/golemcore-1.0.5.jar || (echo "Missing libs/golemcore-1.0.5.jar (attach it to the libs release)" && exit 1)
       - name: Build
         run: gradle build --no-daemon --stacktrace
       - uses: actions/upload-artifact@v4

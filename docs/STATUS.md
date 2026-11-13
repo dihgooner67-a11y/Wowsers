@@ -12,18 +12,22 @@ EMBER (v0.1)     WRITTEN (untested in game)
   NOT yet: jammer (field disturber) logic, final-phase sequence, screen shake/flash,
   looped overload sound, spinning-ring/light client rendering, new GUI readouts
 
-HALO (v0.2)      PARTIAL = "HALO-A"
-  DONE (written):
+HALO (v0.2)      PARTIAL = "HALO-B"
+  DONE (written, untested):
   - Receiver <-> core linking (beam passes core, next receiver becomes absorber)
-  - Stabilizer feeds core stabilization (via core.field)
-  TODO (HALO-B):
-  - Emitter changes (cryogel/perfluoromethyl coolant, SPK output)
-  - Injector changes (energy boost)
-  - Receiver "level", destruction level, shrapnel entities
-  - New blocks: exchanger, core emitter (cemitter), pulser/detonator, lens, crucifix
-  - DFC models/textures converted to 1.20.1 format
+  - Stabilizer: addon power demand (watts^5 * drain), lens field/energy modifiers, 1e13 buffer
+  - 5 addon lenses (blank, limiter, booster, omega, safe) with models/textures/lang
+  - Crucifix + DFC fix tool as items (tooltips only; behaviour needs collapse logic)
+  TODO (HALO-C):
+  - Emitter changes (coolant, SPK output), injector changes
+  - Receiver level / destruction, shrapnel entity
+  - Jammer + collapse sequence, crucifix/fix-tool behaviour, final phase
+  - New blocks: exchanger, core emitter (cemitter), pulser/detonator, osmiridium block
+  - GUIs, particles, core/component renderers, sounds
+  - AMS rework (powercores/ams: base, emitter, stabilizer blocks)
 
-CINDER (v0.3)    reactors/power        FORGE (v0.4)   other machines
-RELIC (v0.5)     items/gear/fluids     BRICK (v0.6)   building/network
-WASTELAND (v0.7) worldgen/bombs/effects SCALPEL (v0.8) mixin triage
+CINDER (v0.3)    PLANNED, see docs/CINDER_PLAN.md   (reactors: ZIRNOX, RBMK, APR, LFTR, PWR)
+FORGE (v0.4)     other machines
+RELIC (v0.5)     items/gear/fluids      BRICK (v0.6)      building/network
+WASTELAND (v0.7) worldgen/bombs/effects SCALPEL (v0.8)    mixin triage
 CURSED (v1.0)    recipes, lang, JEI, release

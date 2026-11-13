@@ -55,6 +55,8 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
     @Unique private final List<TileEntityCoreReceiver> cursed$absorbers = new ArrayList<>();
     @Unique private double cursed$incomingSpk;
     @Unique private int cursed$overloadTimer;
+    @Unique private double cursed$stabilization;
+    @Unique private double cursed$energyMod = 1.0;
 
     protected CoreMixin(BlockEntityType<?> type, BlockPos pos, BlockState state, int slots) {
         super(type, pos, state, slots);
@@ -99,6 +101,8 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
             cursed$absorbers.clear();
             cursed$incomingSpk = 0;
             cursed$overloadTimer = 0;
+            cursed$stabilization = 0;
+            cursed$energyMod = 1.0;
             heat = 0;
             return;
         }
@@ -106,7 +110,8 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
         int meltA = melt(a), meltB = melt(b);
         DfcCoreSim.Inputs in = new DfcCoreSim.Inputs();
         in.incomingSpk = cursed$incomingSpk;
-        in.stabilization = field * DfcTuning.STABILIZATION_PER_FIELD;
+        in.stabilization = cursed$stabilization;
+        in.energyMod = cursed$energyMod;
         in.absorberLevels = new double[cursed$absorbers.size()];
         java.util.Arrays.fill(in.absorberLevels, 1.0); // ASSUMPTION: per-receiver "level" ported in HALO-B
         in.catalystPowerAbs = ItemCatalyst.getPowerAbs(a) + ItemCatalyst.getPowerAbs(b);
@@ -133,6 +138,8 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
         for (int i = 0; i < cursed$absorbers.size(); i++) cursed$absorbers.get(i).joules += out.receiverJoules[i];
         cursed$absorbers.clear();
         cursed$incomingSpk = 0;
+        cursed$stabilization = 0;
+        cursed$energyMod = 1.0;
         // catalyst wear
         a.getOrCreateTag().putDouble("damage", out.damageA);
         b.getOrCreateTag().putDouble("damage", out.damageB);
@@ -179,6 +186,10 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
 
     // ---- IDfcCore ----
     @Override public void cursed$addAbsorber(TileEntityCoreReceiver r) { if (!cursed$absorbers.contains(r)) cursed$absorbers.add(r); }
+    @Override public void cursed$stabilize(double stab, float lensEnergy) {
+        cursed$stabilization += stab;
+        cursed$energyMod = lensEnergy >= 1.0f ? cursed$energyMod + (lensEnergy - 1.0f) : cursed$energyMod * lensEnergy;
+    }
     @Override public double cursed$getTemperature() { return cursed$sim().temperature; }
     @Override public double cursed$getContainedEnergy() { return cursed$sim().containedEnergy; }
     @Override public int cursed$getOverloadTimer() { return cursed$overloadTimer; }

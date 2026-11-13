@@ -5,8 +5,6 @@ public final class DfcTuning {
     private DfcTuning() {}
     /** Emitter joules -> SPK. Same constant as the 1.12.2 addon (out / 1,000,000). */
     public static final double SPK_PER_JOULE = 1.0E-6;
-    /** ASSUMPTION: Continuum stabilizers set core.field (0..100); the addon used a 0..~10 "stabilization". */
-    public static final double STABILIZATION_PER_FIELD = 0.1;
     public static final int DEFAULT_MELTING_POINT = 2250;
     public static final int OVERLOAD_TICKS = 120;
     public static final double TIME_TO_MELTDOWN = 10.0, TIME_TO_REGEN = 30.0;
