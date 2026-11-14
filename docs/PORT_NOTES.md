@@ -30,3 +30,8 @@
 - Item wear uses Continuum's data-component wrapper (`ItemLens.get/setLensDamage`), not plain NBT. Catalyst wear still writes NBT key "damage" (ASSUMPTION: Continuum's ItemCatalyst has no wear of its own, so nothing conflicts; check in game).
 - Continuum ships a single stabilizer lens (`ams_lens`); the addon's five lenses are new items here. `ams_lens` is treated as modifiers 1/1/1.
 - Mixin targets in Continuum: stabilizer `lens()` is private and shadowed as protected abstract.
+
+## Testing without a GUI
+- `/cursed core` while looking at the core prints temperature, contained energy and overload timer.
+- `/cursed receiver 0.5` sets the receiver you look at to take half of the core's output.
+- Heat zone damage ignores hazmat/HEV armor for now.

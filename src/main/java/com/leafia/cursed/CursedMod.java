@@ -1,6 +1,15 @@
 package com.leafia.cursed;
 
+import com.leafia.cursed.dfc.IDfcCore;
+import com.leafia.cursed.dfc.IDfcReceiver;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
+import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,6 +51,48 @@ public class CursedMod {
             e.getToolTip().add(Component.literal("\u00a77It's a crucifix."));
             e.getToolTip().add(Component.literal("\u00a77Throw this into a collapsing DFC to shut it down."));
         }
+    }
+
+    /** /cursed core  - readout of the core you look at;  /cursed receiver [0..1] - show/set a receiver's absorption level. */
+    @SubscribeEvent
+    public void commands(RegisterCommandsEvent e) {
+        e.getDispatcher().register(Commands.literal("cursed")
+            .then(Commands.literal("core").executes(ctx -> {
+                ServerPlayer p = ctx.getSource().getPlayerOrException();
+                if (target(p) instanceof IDfcCore c) {
+                    ctx.getSource().sendSuccess(() -> Component.literal(String.format(
+                        "DFC: temperature %.0f, contained energy %.0f, overload timer %d",
+                        c.cursed$getTemperature(), c.cursed$getContainedEnergy(), c.cursed$getOverloadTimer())), false);
+                    return 1;
+                }
+                ctx.getSource().sendFailure(Component.literal("Look at a DFC core (within 8 blocks)."));
+                return 0;
+            }))
+            .then(Commands.literal("receiver")
+                .executes(ctx -> {
+                    ServerPlayer p = ctx.getSource().getPlayerOrException();
+                    if (target(p) instanceof IDfcReceiver r) {
+                        ctx.getSource().sendSuccess(() -> Component.literal("Receiver level: " + r.cursed$getLevel()), false);
+                        return 1;
+                    }
+                    ctx.getSource().sendFailure(Component.literal("Look at a DFC receiver (within 8 blocks)."));
+                    return 0;
+                })
+                .then(Commands.argument("level", DoubleArgumentType.doubleArg(0.0, 1.0)).executes(ctx -> {
+                    ServerPlayer p = ctx.getSource().getPlayerOrException();
+                    if (target(p) instanceof IDfcReceiver r) {
+                        r.cursed$setLevel(DoubleArgumentType.getDouble(ctx, "level"));
+                        ctx.getSource().sendSuccess(() -> Component.literal("Receiver level set to " + r.cursed$getLevel()), false);
+                        return 1;
+                    }
+                    ctx.getSource().sendFailure(Component.literal("Look at a DFC receiver (within 8 blocks)."));
+                    return 0;
+                }))));
+    }
+
+    private static BlockEntity target(ServerPlayer p) {
+        HitResult hr = p.pick(8.0, 0.0f, false);
+        return hr instanceof BlockHitResult b ? p.level().getBlockEntity(b.getBlockPos()) : null;
     }
 
     private static String pct(float v) { return Math.round(v * 100.0f) + "%"; }

@@ -1,5 +1,6 @@
 package com.leafia.cursed.mixin;
 
+import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.machine.dfc.TileEntityCore;
 import com.hbm.tileentity.machine.dfc.TileEntityCoreReceiver;
 import com.leafia.cursed.dfc.BeamContext;
@@ -24,13 +25,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = TileEntityCoreReceiver.class, remap = false)
 public abstract class ReceiverMixin implements IDfcReceiver {
     @Shadow public long joules;
+    @Shadow public abstract ForgeDirection facing();
     @Unique private double cursed$level = 1.0;
     @Unique private int cursed$destruction;
 
     @Inject(method = "addEnergy", at = @At("HEAD"))
     private void cursed$link(Level level, BlockPos pos, long energy, Direction dir, CallbackInfo ci) {
         TileEntityCore core = BeamContext.get();
-        if (core != null) ((IDfcCore) core).cursed$addAbsorber((TileEntityCoreReceiver) (Object) this);
+        // wrong-side hits are destroyed by Continuum itself; only link beams arriving on the front face
+        if (core != null && dir.getOpposite() == facing().toDirection()) ((IDfcCore) core).cursed$addAbsorber((TileEntityCoreReceiver) (Object) this);
     }
 
     /** Addon rule: >= 1e11 joules in a tick builds damage; past 300 there is a 1% chance per tick to blow. */

@@ -29,7 +29,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -175,7 +179,56 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
             cursed$resetCollapse();
         } else cursed$overloadTimer = 0;
 
+        if (sim.temperature > 100.0) cursed$vaporization(level);
+        if (cursed$collapsing > 0.666) cursed$pullEntities(level);
         if (cursed$collapsing > 0.0) cursed$handleFixTools(level);
+    }
+
+    @Unique private static boolean cursed$isFixItem(Entity e) {
+        if (!(e instanceof ItemEntity ie)) return false;
+        Item i = ie.getItem().getItem();
+        return i == CursedItems.FIX_TOOL.get() || i == CursedItems.CRUCIFIX.get();
+    }
+
+    /** Heat zone around a hot core; and, while collapsing, a lethal inner box (addon vaporization()). */
+    @Unique private void cursed$vaporization(Level level) {
+        double temp = cursed$sim().temperature;
+        BlockPos p = getBlockPos();
+        double scale = (int) Math.log(temp / 50.0 + 1.0) * 1.25 / 4.0 + 0.5;
+        int range = (int) (scale * 4.0);
+        AABB zone = new AABB(p.getX() - range + 0.5, p.getY() - range + 0.5, p.getZ() - range + 0.5,
+                             p.getX() + range + 0.5, p.getY() + range + 0.5, p.getZ() + range + 0.5);
+        for (Entity e : level.getEntities((Entity) null, zone)) {
+            if (cursed$isFixItem(e) || e instanceof FallingBlockEntity) continue;
+            boolean creative = e instanceof Player pl && pl.getAbilities().instabuild;
+            if (!creative) e.hurt(ModDamageSources.amsCore(level), (float) (int) (temp / 100.0));
+            e.setSecondsOnFire(3);
+        }
+        if (cursed$collapsing > 0.0) {
+            AABB inner = new AABB(p.getX() + 0.4, p.getY() + 0.4, p.getZ() + 0.4, p.getX() + 0.6, p.getY() + 0.6, p.getZ() + 0.6);
+            for (Entity e : level.getEntities((Entity) null, inner)) {
+                if (cursed$isFixItem(e)) continue;
+                e.hurt(ModDamageSources.amsCore(level), (float) (int) (temp / 10.0));
+                if (!(e instanceof LivingEntity)) e.discard();
+            }
+        }
+    }
+
+    /** The collapsing core drags everything within 150 blocks toward itself (addon getPull/pull). */
+    @Unique private void cursed$pullEntities(Level level) {
+        final double range = 150.0;
+        Vec3 c = Vec3.atCenterOf(getBlockPos());
+        double strength = 0.1 * Math.pow(Math.max(0.0, cursed$collapsing / 0.666 - 1.0) * 2.0, 0.5);
+        if (strength <= 0.0) return;
+        for (Entity e : level.getEntities((Entity) null, new AABB(getBlockPos()).inflate(range))) {
+            if (e instanceof FallingBlockEntity || cursed$isFixItem(e)) continue;
+            double dist = c.distanceTo(e.position());
+            if (dist > range || dist < 1.0E-3) continue;
+            double pull = Math.pow(Math.max(0.0, Math.min(1.0, 1.0 - dist / range)), 1.5) * strength;
+            Vec3 dir = c.subtract(e.position()).normalize().scale(pull);
+            e.push(dir.x, dir.y, dir.z);
+            e.hurtMarked = true; // sync velocity to players
+        }
     }
 
     /** @return true if the core detonated this tick */

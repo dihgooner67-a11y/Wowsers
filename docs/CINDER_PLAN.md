@@ -1,21 +1,23 @@
-CINDER (v0.3): REACTORS PLAN
-Source: com/leafia/contents/machines/reactors in the 1.12.2 addon (82 classes)
+CINDER (v0.3): REACTORS PLAN  (revised after reading the ZIRNOX source)
 
-ORDER (smallest first, so each zip is testable)
-1. ZIRNOX   2 classes   - likely a mixin-style tweak to Continuum's existing ZIRNOX
-2. RBMK     9 classes   - RealerSim column, debris smoke
-3. APR      11 classes  - core, fluid IO ports, power outlet (multiblock)
-4. LFTR/MSR 22 classes  - element, plug, control, arbitrary, ejector, salt separator
-5. PWR      38 classes  - element, channel, exchanger, conductor, terminal, control,
-                          port, computer, OCCS in/out, reflector, hull
+KEY FINDING
+The addon's reactors all run on its own fuel-rod system (LeafiaRodItem, 1,231 lines, 59 rod types,
+in contents/control/fuel). The rewritten ZIRNOX only simulates those rods, so rods come first.
 
-PER-REACTOR WORK (same checklist each time)
-- Compare with Continuum's own version first (Continuum already has several reactors)
-- Block + BlockEntity registration, blockstates, models (1.12 OBJ/JSON -> 1.20.1)
-- Server tick logic (port from decompiled source, math stays in plain Java like DfcCoreSim)
-- GUI/container, fluid + heat + radiation hooks through Continuum's APIs
-- Textures, lang, recipes
+STEPS (each one a zip)
+CINDER-A  DONE (written, headless-tested)
+  fuel/RodSim      heat function: flux -> heat, cooling, depletion, melting, decay
+  fuel/RodTypes    all 59 rod types (life, melting point, reactivity, emission, flags)
+  fuel/RodType, RodState
+CINDER-B  rod items: register the 59 rods, stack data (heat/depletion/...), tooltips, textures,
+          depleted-rod decay products, rod crafting
+CINDER-C  ZIRNOX rewrite (868-line TE mixin): hull temperature, pressure, valve, compression,
+          control rod movement, debris/explosion; controls via commands until a GUI exists
+CINDER-D  RBMK changes (9 classes)           CINDER-E  APR (11)
+CINDER-F  LFTR/MSR (22)                      CINDER-G  PWR (38)
 
-STATE
-- Not started in code. Start after HALO builds, so the first compile errors are fixed once.
-- Decompiled sources live only in the addon jar; each reactor is read out with CFR before porting.
+PER-STEP CHECKLIST
+- Compare with Continuum's own version first
+- Pure-Java simulation class + headless test, then the Minecraft-facing hook
+- Registration, models, textures, lang, recipes; GUI work grouped into its own milestone
+- Known gap: "Shitfuckium" rod uses a lookup table (ShitfuckiumData) not ported yet

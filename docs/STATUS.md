@@ -12,25 +12,24 @@ EMBER (v0.1)     WRITTEN (untested in game)
   NOT yet: jammer (field disturber) logic, final-phase sequence, screen shake/flash,
   looped overload sound, spinning-ring/light client rendering, new GUI readouts
 
-HALO (v0.2)      IN PROGRESS = "HALO-C1" (build of HALO-A/B confirmed compiling on GitHub; not run in game yet)
+HALO (v0.2)      SERVER LOGIC COMPLETE = "HALO-C2" (needs a game test)
   DONE (written):
-  - Receiver <-> core linking; receiver "level" (default 1.0, saved) and destruction
-    (>= 1e11 joules/tick builds damage, then 1%/tick explosion)
-  - Stabilizer: watts^5 * drain, lens field/energy modifiers, 1e13 buffer
-  - 5 addon lenses; crucifix + fix tool items
-  - Overload countdown (120 ticks) -> blast sized 20 + temp^0.4, or, if a Field Disturber is in range,
-    120 s collapse with final phase at 15 s (receivers explode, no payout), then blast
-  - Crucifix / fix tool thrown into a collapsing core (survival 80% fail - 10% per stabilizer;
-    always fails in final phase or while a beam is boosting)
-  TODO (HALO-C2):
-  - Collapse side effects: pulling entities/blocks in, vaporization/heat damage around the core
-  - Client: screen shake, DFC blast particles, rings/lights, looped sounds, GUI readouts
-  - Receiver level slider (GUI) and wrong-side beam explosion
-  - Emitter extras (beam burns blocks/entities), injector extras (sounds/control events)
-  - New blocks: exchanger, core emitter (cemitter), pulser/detonator, osmiridium block, shrapnel entity
-  - AMS rework (powercores/ams: base, emitter, stabilizer blocks)
+  - Receiver <-> core linking (front face only), receiver "level" (saved) and destruction
+  - Stabilizer: watts^5 * drain, lens field/energy modifiers, 1e13 buffer; 5 addon lenses
+  - Crucifix + fix tool items and their collapse behaviour
+  - Overload -> blast, or Field Disturber collapse (120 s, final phase at 15 s)
+  - Heat zone damage around a hot core, lethal inner box and 150-block entity pull while collapsing
+  - Commands: /cursed core (readout of the core you look at), /cursed receiver [0..1] (show/set level)
+  NOT in HALO (moved to CORONA, v0.2.5):
+  - New blocks with GUIs/models: exchanger, core emitter (cemitter), pulser/detonator,
+    osmiridium block, shrapnel entity
+  - Client visuals: screen shake, blast particles, rings/lights, looped sounds, GUI readouts
+  - Emitter/injector extras (beam burns blocks, sounds/control events), AMS rework
+  - Hazmat/HEV damage immunity in the heat zone (Continuum armor API not checked yet)
 
-CINDER (v0.3)    PLANNED, see docs/CINDER_PLAN.md   (reactors: ZIRNOX, RBMK, APR, LFTR, PWR)
+CORONA (v0.2.5)  PLANNED  (the items above)
+
+CINDER (v0.3)    STARTED = "CINDER-A": rod heat simulation + all 59 rod types (not yet items); see docs/CINDER_PLAN.md
 FORGE (v0.4)     other machines
 RELIC (v0.5)     items/gear/fluids      BRICK (v0.6)      building/network
 WASTELAND (v0.7) worldgen/bombs/effects SCALPEL (v0.8)    mixin triage
