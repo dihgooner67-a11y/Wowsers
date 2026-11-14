@@ -37,7 +37,18 @@ CINDER (v0.3)    A, B, C WRITTEN (untested in game)
      Continuum's own rods keep Continuum's tick. Commands: /cursed zirnox [rods <0-100|auto>] [valve <bool>]
   NOT yet: rod crafting table + JEI, addon-style billet-composited rod art, inventory heat/radiation,
   ZIRNOX GUI dials/valve/compression, debris entities, Shitfuckium lookup table
-  NEXT: CINDER-D RBMK, E APR, F LFTR/MSR, G PWR   (see docs/CINDER_PLAN.md)
+  D1 RBMK column damage (written): columns no longer melt the instant they pass max heat; overheating
+     builds damage (2+ per tick, more above 3000), cooling heals 1/tick, meltdown above 1200.
+     Fuel columns' instant-meltdown check is neutralised. /cursed rbmk shows heat and damage.
+  D2 RBMK (written): auto control rod SCRAM latch (rod stays inserted until acknowledged; saved),
+     /cursed rbmk scram | acknowledge (look at any column; flood-fills connected columns),
+     damaged columns vent smoke/flame particles (stand-in for the jumping-column jets)
+  NOT in RBMK (needs client/GUI work): jumping-column animation, debris smoke block, console SCRAM button,
+  auto-rod GUI, "rod is shut off" console marker, RealerSim column block
+  E1 APR simulation (written, headless-tested): apr/AprSim = ring tick (control rods, particle count,
+     oxygen->LOX conversion, chamber blankets, rps, hull temp, damage, failure) and power output formula.
+     No machine yet: blocks, assembly check and the failure explosion come with E2.
+  NEXT: E2 APR machine (command readouts), F LFTR/MSR, G addon PWR alongside Continuum's  (docs/REACTORS_PLAN.md)
 FORGE (v0.4)     other machines
 RELIC (v0.5)     items/gear/fluids      BRICK (v0.6)      building/network
 WASTELAND (v0.7) worldgen/bombs/effects SCALPEL (v0.8)    mixin triage

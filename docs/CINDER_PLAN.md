@@ -13,7 +13,7 @@ CINDER-B  DONE (written): rod items: register the 59 rods, stack data (heat/depl
           depleted-rod decay products, rod crafting
 CINDER-C  DONE (written): ZIRNOX rewrite (868-line TE mixin): hull temperature, pressure, valve, compression,
           control rod movement, debris/explosion; controls via commands until a GUI exists
-CINDER-D  RBMK changes (9 classes)           CINDER-E  APR (11)
+CINDER-D  RBMK changes (9 classes + 6 mixins): D1 damage system DONE (written); D2 visuals/RealerSim/auto control TODO           CINDER-E  APR (11)
 CINDER-F  LFTR/MSR (22)                      CINDER-G  PWR (38)
 
 PER-STEP CHECKLIST

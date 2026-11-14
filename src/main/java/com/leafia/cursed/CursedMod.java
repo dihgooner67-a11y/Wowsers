@@ -2,6 +2,8 @@ package com.leafia.cursed;
 
 import com.leafia.cursed.dfc.IDfcCore;
 import com.leafia.cursed.dfc.IDfcReceiver;
+import com.leafia.cursed.rbmk.IRbmkDamage;
+import com.leafia.cursed.rbmk.RbmkScram;
 import com.leafia.cursed.zirnox.IZirnoxControl;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
@@ -50,7 +52,7 @@ public class CursedMod {
         }
     }
 
-    /** /cursed zirnox [rods <0-100|auto> | valve <true|false>] - ZIRNOX controls;  /cursed core  - readout of the core you look at;  /cursed receiver [0..1] - show/set a receiver's absorption level. */
+    /** /cursed rbmk [scram|acknowledge] - RBMK damage readout and auto-rod SCRAM;  /cursed zirnox [rods <0-100|auto> | valve <true|false>] - ZIRNOX controls;  /cursed core  - readout of the core you look at;  /cursed receiver [0..1] - show/set a receiver's absorption level. */
     @SubscribeEvent
     public void commands(RegisterCommandsEvent e) {
         e.getDispatcher().register(Commands.literal("cursed")
@@ -65,6 +67,18 @@ public class CursedMod {
                 ctx.getSource().sendFailure(Component.literal("Look at a DFC core (within 8 blocks)."));
                 return 0;
             }))
+            .then(Commands.literal("rbmk")
+                .executes(ctx -> {
+                    ServerPlayer p = ctx.getSource().getPlayerOrException();
+                    if (target(p) instanceof IRbmkDamage d) {
+                        ctx.getSource().sendSuccess(() -> Component.literal(d.cursed$status()), false);
+                        return 1;
+                    }
+                    ctx.getSource().sendFailure(Component.literal("Look at an RBMK column (within 8 blocks)."));
+                    return 0;
+                })
+                .then(Commands.literal("scram").executes(ctx -> rbmkScram(ctx.getSource(), true)))
+                .then(Commands.literal("acknowledge").executes(ctx -> rbmkScram(ctx.getSource(), false))))
             .then(Commands.literal("zirnox")
                 .executes(ctx -> zirnox(ctx.getSource().getPlayerOrException(), ctx.getSource(), z -> z.cursed$status()))
                 .then(Commands.literal("rods")
@@ -109,6 +123,17 @@ public class CursedMod {
             return 1;
         }
         src.sendFailure(Component.literal("Look at the ZIRNOX reactor core block (within 8 blocks)."));
+        return 0;
+    }
+
+    private static int rbmkScram(net.minecraft.commands.CommandSourceStack src, boolean scram) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer p = src.getPlayerOrException();
+        if (p.pick(8.0, 0.0f, false) instanceof BlockHitResult hit && p.level().getBlockEntity(hit.getBlockPos()) instanceof IRbmkDamage) {
+            int n = RbmkScram.apply(p.level(), hit.getBlockPos(), scram);
+            src.sendSuccess(() -> Component.literal((scram ? "SCRAM sent to " : "SCRAM acknowledged on ") + n + " auto control rod(s)."), true);
+            return 1;
+        }
+        src.sendFailure(Component.literal("Look at an RBMK column (within 8 blocks)."));
         return 0;
     }
 
