@@ -29,7 +29,15 @@ HALO (v0.2)      SERVER LOGIC COMPLETE = "HALO-C2" (needs a game test)
 
 CORONA (v0.2.5)  PLANNED  (the items above)
 
-CINDER (v0.3)    STARTED = "CINDER-A": rod heat simulation + all 59 rod types (not yet items); see docs/CINDER_PLAN.md
+CINDER (v0.3)    A, B, C WRITTEN (untested in game)
+  A  rod heat simulation (RodSim) + 59 rod types
+  B  59 rod items cursed:rod_<id> (NBT heat/depletion like the addon, bar, tooltip, tinted overlay,
+     depleted-rod decay products), own creative tab "NTM Cursed Edition"
+  C  ZIRNOX rewrite (ZirnoxSim + ZirnoxMixin): used automatically when the reactor holds addon rods;
+     Continuum's own rods keep Continuum's tick. Commands: /cursed zirnox [rods <0-100|auto>] [valve <bool>]
+  NOT yet: rod crafting table + JEI, addon-style billet-composited rod art, inventory heat/radiation,
+  ZIRNOX GUI dials/valve/compression, debris entities, Shitfuckium lookup table
+  NEXT: CINDER-D RBMK, E APR, F LFTR/MSR, G PWR   (see docs/CINDER_PLAN.md)
 FORGE (v0.4)     other machines
 RELIC (v0.5)     items/gear/fluids      BRICK (v0.6)      building/network
 WASTELAND (v0.7) worldgen/bombs/effects SCALPEL (v0.8)    mixin triage

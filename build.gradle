@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.leafia.cursed'
-version = '0.3.0-cinder-a'
+version = '0.3.2-cinder-c'
 base { archivesName = 'cursed-continuum' }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)

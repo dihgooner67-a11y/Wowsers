@@ -2,7 +2,10 @@ package com.leafia.cursed;
 
 import com.leafia.cursed.dfc.IDfcCore;
 import com.leafia.cursed.dfc.IDfcReceiver;
+import com.leafia.cursed.zirnox.IZirnoxControl;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,11 +13,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -29,13 +30,9 @@ public class CursedMod {
         var modBus = FMLJavaModLoadingContext.get().getModEventBus();
         CursedItems.ITEMS.register(modBus);
         CursedSounds.SOUNDS.register(modBus);
-        modBus.addListener(this::creativeTabs);
+        com.leafia.cursed.fuel.RodItems.ITEMS.register(modBus);
+        CursedTabs.TABS.register(modBus);
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    private void creativeTabs(BuildCreativeModeTabContentsEvent e) {
-        if (e.getTabKey() != CreativeModeTabs.TOOLS_AND_UTILITIES) return;
-        CursedItems.ITEMS.getEntries().forEach(o -> e.accept(o.get()));
     }
 
     @SubscribeEvent
@@ -53,7 +50,7 @@ public class CursedMod {
         }
     }
 
-    /** /cursed core  - readout of the core you look at;  /cursed receiver [0..1] - show/set a receiver's absorption level. */
+    /** /cursed zirnox [rods <0-100|auto> | valve <true|false>] - ZIRNOX controls;  /cursed core  - readout of the core you look at;  /cursed receiver [0..1] - show/set a receiver's absorption level. */
     @SubscribeEvent
     public void commands(RegisterCommandsEvent e) {
         e.getDispatcher().register(Commands.literal("cursed")
@@ -68,6 +65,21 @@ public class CursedMod {
                 ctx.getSource().sendFailure(Component.literal("Look at a DFC core (within 8 blocks)."));
                 return 0;
             }))
+            .then(Commands.literal("zirnox")
+                .executes(ctx -> zirnox(ctx.getSource().getPlayerOrException(), ctx.getSource(), z -> z.cursed$status()))
+                .then(Commands.literal("rods")
+                    .then(Commands.literal("auto").executes(ctx -> zirnox(ctx.getSource().getPlayerOrException(), ctx.getSource(),
+                        z -> { z.cursed$setRodsTarget(-1); return "Control rods follow the on/off switch."; })))
+                    .then(Commands.argument("percent", IntegerArgumentType.integer(0, 100)).executes(ctx -> {
+                        int pct = IntegerArgumentType.getInteger(ctx, "percent");
+                        return zirnox(ctx.getSource().getPlayerOrException(), ctx.getSource(),
+                            z -> { z.cursed$setRodsTarget(pct); return "Control rod target set to " + pct + "%."; });
+                    })))
+                .then(Commands.literal("valve").then(Commands.argument("open", BoolArgumentType.bool()).executes(ctx -> {
+                    boolean open = BoolArgumentType.getBool(ctx, "open");
+                    return zirnox(ctx.getSource().getPlayerOrException(), ctx.getSource(),
+                        z -> { z.cursed$setValve(open); return "CO2 valve " + (open ? "open." : "closed."); });
+                }))))
             .then(Commands.literal("receiver")
                 .executes(ctx -> {
                     ServerPlayer p = ctx.getSource().getPlayerOrException();
@@ -88,6 +100,16 @@ public class CursedMod {
                     ctx.getSource().sendFailure(Component.literal("Look at a DFC receiver (within 8 blocks)."));
                     return 0;
                 }))));
+    }
+
+    private static int zirnox(ServerPlayer p, net.minecraft.commands.CommandSourceStack src, java.util.function.Function<IZirnoxControl, String> action) {
+        if (target(p) instanceof IZirnoxControl z) {
+            String msg = action.apply(z);
+            src.sendSuccess(() -> Component.literal(msg), false);
+            return 1;
+        }
+        src.sendFailure(Component.literal("Look at the ZIRNOX reactor core block (within 8 blocks)."));
+        return 0;
     }
 
     private static BlockEntity target(ServerPlayer p) {
