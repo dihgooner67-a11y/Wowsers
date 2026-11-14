@@ -2,7 +2,7 @@ package com.leafia.cursed.mixin;
 
 import com.hbm.tileentity.machine.MachineFluidContainerIO;
 import com.hbm.tileentity.machine.TileEntityReactorZirnox;
-import com.leafia.cursed.fuel.RodItem;
+import com.leafia.cursed.fuel.Item;
 import com.leafia.cursed.fuel.RodType;
 import com.leafia.cursed.fuel.ZirnoxSim;
 import com.leafia.cursed.zirnox.IZirnoxControl;
