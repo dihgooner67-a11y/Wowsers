@@ -78,5 +78,6 @@
   "block.cursed.apr_blades": "APR Blades",
   "block.cursed.lftr_element": "LFTR Fuel Element",
   "block.cursed.lftr_control": "LFTR Control Rod Drive",
-  "block.cursed.lftr_extension": "LFTR Control Rod Extension"
+  "block.cursed.lftr_extension": "LFTR Control Rod Extension",
+  "block.cursed.lftr_heat_exchanger": "LFTR Heat Exchanger"
 }

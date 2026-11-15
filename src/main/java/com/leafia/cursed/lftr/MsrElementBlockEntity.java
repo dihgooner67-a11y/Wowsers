@@ -57,6 +57,18 @@ public class MsrElementBlockEntity extends BlockEntity {
         setChanged();
     }
 
+    /** One nugget adds 2% of this fuel to the salt (the cell is filled with salt first if empty). */
+    public String addNugget(String fuel) {
+        double total = cell.mixture.values().stream().mapToDouble(Double::doubleValue).sum();
+        if (total + NUGGET_FRACTION > 1.0) return "The salt cannot hold any more fuel.";
+        if (cell.amount <= 0) cell.amount = cell.capacity;
+        cell.mixture.merge(fuel, NUGGET_FRACTION, Double::sum);
+        setChanged();
+        return String.format("Dissolved 1 %s nugget: %.0f%% fuel in the salt.", fuel, (total + NUGGET_FRACTION) * 100.0);
+    }
+
+    public static final double NUGGET_FRACTION = 0.02;
+
     public String status() {
         StringBuilder sb = new StringBuilder(String.format("LFTR element: salt %d/%d mB, heat %.0f (breach at %.0f), control restriction %.0f%%",
             cell.amount, cell.capacity, cell.heat, MsrSim.BREACH_HEAT - BASE_TEMPERATURE, cell.restriction * 100.0));

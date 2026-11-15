@@ -20,7 +20,8 @@ public final class LftrCommands {
     public static LiteralArgumentBuilder<CommandSourceStack> node() {
         return Commands.literal("msr")
             .executes(c -> run(c, be -> be instanceof MsrElementBlockEntity e ? e.status()
-                : be instanceof MsrControlBlockEntity r ? r.status() : null))
+                : be instanceof MsrControlBlockEntity r ? r.status()
+                : be instanceof MsrHeatExchangerBlockEntity x ? x.status() : null))
             .then(Commands.literal("fuel").then(Commands.argument("type", StringArgumentType.word())
                 .then(Commands.argument("percent", IntegerArgumentType.integer(1, 100)).executes(c -> run(c, be -> {
                     if (!(be instanceof MsrElementBlockEntity e)) return null;

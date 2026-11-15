@@ -180,6 +180,7 @@ public class AprCoreBlockEntity extends TileEntityMachineBase implements IEnergy
         if (!assembled) {
             sim.tick(false);
             power = 0;
+            updateFunnel(level);
             return;
         }
         FluidType ot = oxygen.getTankType();
@@ -212,8 +213,17 @@ public class AprCoreBlockEntity extends TileEntityMachineBase implements IEnergy
             chOut[i].setFill(sim.chambers.get(i).outFill);
         }
         power = sim.powerOutput();
+        updateFunnel(level);
 
         if (res.disassemble || !res.chamberBlasts.isEmpty()) fail(level, res);
+    }
+
+    /** Shows the control setting on the block: the funnel opens in 4 steps as control goes 0 -> 100%. */
+    private void updateFunnel(Level level) {
+        int bucket = assembled ? Math.max(0, Math.min(4, (int) Math.round(sim.control / 25.0))) : 0;
+        BlockState st = getBlockState();
+        if (st.hasProperty(AprCoreBlock.FUNNEL) && st.getValue(AprCoreBlock.FUNNEL) != bucket)
+            level.setBlock(getBlockPos(), st.setValue(AprCoreBlock.FUNNEL, bucket), 3);
     }
 
     /** Overload: ring blasts, and a large explosion if the reactor spun past its limit (addon: LCA nuke + torex). */

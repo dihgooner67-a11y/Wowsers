@@ -24,3 +24,10 @@ Hadron Coil, Support Beam, Hull, Blades (Hull (Assembled) is what Hull turns int
 
 NOT IN YET: GUI, separate fluid port blocks and power outlet function, particle items, 3D core model,
 sounds, the addon's own gaseous oxygen/pyrogel fluids, advancement.
+
+ABOUT "CONTROL RODS" (fixed in CINDER-F2)
+The addon's APR has no control rods. Its "control" setting is a funnel in the core model that opens and closes
+(0-100%). My first port stored it as a number only, so nothing visibly moved. Now the APR Core block changes texture in
+5 steps (0/25/50/75/100%) as control moves, and /cursed apr control <0-100> tells you what it is doing.
+Control only moves while the reactor is assembled, and it also scales how much coolant is processed per tick
+(coolant processed = tank x particle share / 20 x control%). Control defaults to 10%.

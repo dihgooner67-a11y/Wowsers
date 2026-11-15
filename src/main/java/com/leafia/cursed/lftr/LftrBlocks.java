@@ -29,10 +29,13 @@ public final class LftrBlocks {
 
     public static final RegistryObject<Block> ELEMENT = block("lftr_element", () -> new MsrElementBlock(props()));
     public static final RegistryObject<Block> CONTROL = block("lftr_control", () -> new MsrControlBlock(props()));
+    public static final RegistryObject<Block> EXCHANGER = block("lftr_heat_exchanger", () -> new MsrHeatExchangerBlock(props()));
     public static final RegistryObject<Block> EXTENSION = block("lftr_extension", () -> new Block(props()));
 
     public static final RegistryObject<BlockEntityType<MsrElementBlockEntity>> ELEMENT_BE = BLOCK_ENTITIES.register("lftr_element",
         () -> BlockEntityType.Builder.of(MsrElementBlockEntity::new, ELEMENT.get()).build(null));
+    public static final RegistryObject<BlockEntityType<MsrHeatExchangerBlockEntity>> EXCHANGER_BE = BLOCK_ENTITIES.register("lftr_heat_exchanger",
+        () -> BlockEntityType.Builder.of(MsrHeatExchangerBlockEntity::new, EXCHANGER.get()).build(null));
     public static final RegistryObject<BlockEntityType<MsrControlBlockEntity>> CONTROL_BE = BLOCK_ENTITIES.register("lftr_control",
         () -> BlockEntityType.Builder.of(MsrControlBlockEntity::new, CONTROL.get()).build(null));
 }

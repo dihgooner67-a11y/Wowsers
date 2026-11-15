@@ -4,7 +4,7 @@ license = "ARR-pending-author-permission"
 
 [[mods]]
 modId = "cursed"
-version = "0.7.0"
+version = "0.7.1"
 displayName = "NTM Cursed Edition (Continuum port)"
 description = '''Port of Leafia's Cursed Addon to NTM - Continuum (Forge 1.20.1). Work in progress.'''
 

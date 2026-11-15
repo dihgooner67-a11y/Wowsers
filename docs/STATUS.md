@@ -54,13 +54,15 @@ CINDER (v0.3)    A, B, C WRITTEN (untested in game)
   F1 LFTR slice (written, simulation headless-tested): lftr/MsrSim (fuel mixtures, decay, breeding chain,
      reactions, moderation, salt/heat sharing, breach), fuel element + control rod drive + extension blocks,
      /cursed msr readouts, fuel loading and control. See docs/LFTR_GUIDE.md.
+  F2 (written): LFTR Heat Exchanger block (power out of the reactor), fuel loading by right-clicking nuggets,
+     APR core funnel visual that follows the control setting (it had no visual before).
   CINDER WRAP-UP: reactors done = DFC core+parts (HALO), ZIRNOX, RBMK, APR, LFTR slice.
   CINDER LEFTOVERS (carried forward, not forgotten):
     - addon PWR (38 files, 8,016 lines) alongside Continuum's PWR: NOT STARTED
     - LFTR heat/power output (ejector, plug, molten-salt fluids) and Salt Separator
     - APR polish (GUI, port blocks, particle items, 3D model)
     - rod crafting table + JEI, ZIRNOX GUI/compression/debris, RBMK client effects and RealerSim column
-FORGE (v0.4)     other machines
+FORGE (v0.4)     STARTED: survey and plan in docs/FORGE_PLAN.md (nothing ported yet)
 RELIC (v0.5)     items/gear/fluids      BRICK (v0.6)      building/network
 WASTELAND (v0.7) worldgen/bombs/effects SCALPEL (v0.8)    mixin triage
 CURSED (v1.0)    recipes, lang, JEI, release

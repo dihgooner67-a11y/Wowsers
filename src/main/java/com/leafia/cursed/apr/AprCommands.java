@@ -54,7 +54,9 @@ public final class AprCommands {
                     be.setChamberFluid(IntegerArgumentType.getInteger(c, "chamber"), StringArgumentType.getString(c, "fluid")))))))
             .then(Commands.literal("control").then(Commands.argument("percent", IntegerArgumentType.integer(0, 100)).executes(c -> run(c, (be, lvl) -> {
                 be.sim.targetControl = IntegerArgumentType.getInteger(c, "percent");
-                return "Control rods moving to " + (int) be.sim.targetControl + "%.";
+                be.setChanged();
+                return (be.assembled ? "Control moving " + (int) be.sim.control + "% -> " + (int) be.sim.targetControl + "% (funnel opens as it rises)."
+                    : "Control target set to " + (int) be.sim.targetControl + "%, but nothing moves until the reactor is assembled.");
             }))))
             .then(Commands.literal("particles").then(Commands.argument("amount", IntegerArgumentType.integer(0)).executes(c -> run(c, (be, lvl) -> {
                 be.sim.particles = Math.min(IntegerArgumentType.getInteger(c, "amount"), be.sim.particleCap);
