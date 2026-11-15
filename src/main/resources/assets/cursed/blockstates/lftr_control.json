@@ -1,0 +1,1 @@
+{"variants": {"facing=north": {"model": "cursed:block/lftr_control"}, "facing=south": {"model": "cursed:block/lftr_control"}, "facing=east": {"model": "cursed:block/lftr_control"}, "facing=west": {"model": "cursed:block/lftr_control"}, "facing=up": {"model": "cursed:block/lftr_control"}, "facing=down": {"model": "cursed:block/lftr_control"}}}

@@ -1,26 +1,36 @@
 package com.leafia.cursed.mixin;
 
+import com.hbm.tileentity.machine.rbmk.BlockEntityRBMKControl;
 import com.hbm.tileentity.machine.rbmk.BlockEntityRBMKControlAuto;
 import com.leafia.cursed.rbmk.IRbmkScram;
 import dev.golem.core.data.DataIn;
 import dev.golem.core.data.DataOut;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** SCRAM latch for auto control rods: while scrammed the rod stays fully inserted until acknowledged. */
+/**
+ * SCRAM latch for auto control rods: while scrammed the rod stays fully inserted until acknowledged.
+ * Extends the parent class because targetLevel is declared in BlockEntityRBMKControl, not in the
+ * auto rod itself (a @Shadow there crashes the game at load).
+ */
 @Mixin(value = BlockEntityRBMKControlAuto.class, remap = false)
-public abstract class RbmkAutoMixin implements IRbmkScram {
-    @Shadow public double targetLevel;
+public abstract class RbmkAutoMixin extends BlockEntityRBMKControl implements IRbmkScram {
     @Unique private boolean cursed$scrammed;
+
+    protected RbmkAutoMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
 
     @Inject(method = "tickServer", require = 1,
         at = @At(value = "INVOKE", target = "Lcom/hbm/tileentity/machine/rbmk/BlockEntityRBMKControl;tickServer()V", remap = false))
     private void cursed$scram(CallbackInfo ci) {
-        if (cursed$scrammed) targetLevel = 0.0;
+        if (cursed$scrammed) this.targetLevel = 0.0;
     }
 
     @Inject(method = "saveData", at = @At("TAIL"))

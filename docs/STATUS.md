@@ -48,7 +48,18 @@ CINDER (v0.3)    A, B, C WRITTEN (untested in game)
   E1 APR simulation (written, headless-tested): apr/AprSim = ring tick (control rods, particle count,
      oxygen->LOX conversion, chamber blankets, rps, hull temp, damage, failure) and power output formula.
      No machine yet: blocks, assembly check and the failure explosion come with E2.
-  NEXT: E2 APR machine (command readouts), F LFTR/MSR, G addon PWR alongside Continuum's  (docs/REACTORS_PLAN.md)
+  E2a APR machine (written, untested in game): 10 blocks, core block entity (AprSim + tanks + chamber tanks +
+     Continuum power/fluid ports), full structure check ported from the addon (torus rings, discs, coils),
+     assemble/disassemble, failure explosions, /cursed apr ... commands. See docs/APR_GUIDE.md.
+  F1 LFTR slice (written, simulation headless-tested): lftr/MsrSim (fuel mixtures, decay, breeding chain,
+     reactions, moderation, salt/heat sharing, breach), fuel element + control rod drive + extension blocks,
+     /cursed msr readouts, fuel loading and control. See docs/LFTR_GUIDE.md.
+  CINDER WRAP-UP: reactors done = DFC core+parts (HALO), ZIRNOX, RBMK, APR, LFTR slice.
+  CINDER LEFTOVERS (carried forward, not forgotten):
+    - addon PWR (38 files, 8,016 lines) alongside Continuum's PWR: NOT STARTED
+    - LFTR heat/power output (ejector, plug, molten-salt fluids) and Salt Separator
+    - APR polish (GUI, port blocks, particle items, 3D model)
+    - rod crafting table + JEI, ZIRNOX GUI/compression/debris, RBMK client effects and RealerSim column
 FORGE (v0.4)     other machines
 RELIC (v0.5)     items/gear/fluids      BRICK (v0.6)      building/network
 WASTELAND (v0.7) worldgen/bombs/effects SCALPEL (v0.8)    mixin triage

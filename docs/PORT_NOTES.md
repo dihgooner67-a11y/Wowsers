@@ -35,3 +35,12 @@
 - `/cursed core` while looking at the core prints temperature, contained energy and overload timer.
 - `/cursed receiver 0.5` sets the receiver you look at to take half of the core's output.
 - Heat zone damage ignores hazmat/HEV armor for now.
+
+## Load-crash lessons (found by the first game launch with CINDER-E1)
+- A @Shadow field/method must be declared in the mixin's own target class. Inherited members (like
+  `targetLevel`, declared in BlockEntityRBMKControl but used by BlockEntityRBMKControlAuto) crash the game at
+  load with "@Shadow field ... was not located in the target class". Fix: make the mixin class extend the parent
+  that declares it and use the member directly.
+- All current @Shadow members and @Inject/@Redirect/@Invoker targets were audited against the decompiled
+  Continuum 1.0.5 sources and are declared in their target classes.
+- The NTM: Space mod crash that appeared in the same report was a knock-on: it needs Continuum, which had failed.

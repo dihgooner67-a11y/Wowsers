@@ -35,3 +35,8 @@ PROGRESS
   6 blocks tall), fluid ports, the failure explosion (LCA nuke + torex have no Continuum equivalent yet),
   and /cursed apr readout. First step is studying how Continuum registers a multiblock block entity.
 - F: LFTR (22 files). G: addon PWR (38 files), registered under its own ids next to Continuum's PWR.
+
+UPDATE (wrap-up of CINDER)
+- E2a APR machine and F1 LFTR slice are written. PWR (G) is the one reactor family not started.
+- PWR recommendation: port in two steps. (1) the PWR fuel rod / heat-up logic so addon rods work in Continuum's PWR
+  (small, like ZIRNOX), (2) the addon's own PWR multiblock (large, own milestone).

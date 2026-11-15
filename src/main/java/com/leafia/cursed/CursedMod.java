@@ -34,6 +34,12 @@ public class CursedMod {
         CursedSounds.SOUNDS.register(modBus);
         com.leafia.cursed.fuel.RodItems.ITEMS.register(modBus);
         CursedTabs.TABS.register(modBus);
+        com.leafia.cursed.apr.AprBlocks.BLOCKS.register(modBus);
+        com.leafia.cursed.apr.AprBlocks.ITEMS.register(modBus);
+        com.leafia.cursed.apr.AprBlocks.BLOCK_ENTITIES.register(modBus);
+        com.leafia.cursed.lftr.LftrBlocks.BLOCKS.register(modBus);
+        com.leafia.cursed.lftr.LftrBlocks.ITEMS.register(modBus);
+        com.leafia.cursed.lftr.LftrBlocks.BLOCK_ENTITIES.register(modBus);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -52,7 +58,7 @@ public class CursedMod {
         }
     }
 
-    /** /cursed rbmk [scram|acknowledge] - RBMK damage readout and auto-rod SCRAM;  /cursed zirnox [rods <0-100|auto> | valve <true|false>] - ZIRNOX controls;  /cursed core  - readout of the core you look at;  /cursed receiver [0..1] - show/set a receiver's absorption level. */
+    /** /cursed apr ... - APR reactor (see docs);  /cursed rbmk [scram|acknowledge] - RBMK damage readout and auto-rod SCRAM;  /cursed zirnox [rods <0-100|auto> | valve <true|false>] - ZIRNOX controls;  /cursed core  - readout of the core you look at;  /cursed receiver [0..1] - show/set a receiver's absorption level. */
     @SubscribeEvent
     public void commands(RegisterCommandsEvent e) {
         e.getDispatcher().register(Commands.literal("cursed")
@@ -67,6 +73,8 @@ public class CursedMod {
                 ctx.getSource().sendFailure(Component.literal("Look at a DFC core (within 8 blocks)."));
                 return 0;
             }))
+            .then(com.leafia.cursed.apr.AprCommands.node())
+            .then(com.leafia.cursed.lftr.LftrCommands.node())
             .then(Commands.literal("rbmk")
                 .executes(ctx -> {
                     ServerPlayer p = ctx.getSource().getPlayerOrException();

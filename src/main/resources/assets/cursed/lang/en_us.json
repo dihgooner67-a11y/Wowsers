@@ -65,5 +65,18 @@
   "item.cursed.rod_shitfuckium": "Shitfuckium Rod",
   "item.cursed.rod_catsmilium": "Catsmilium Rod",
   "item.cursed.rod_confusium": "Confusium Rod",
-  "itemGroup.cursed": "NTM Cursed Edition"
+  "itemGroup.cursed": "NTM Cursed Edition",
+  "block.cursed.apr_core": "APR Core",
+  "block.cursed.apr_outlet": "APR Power Outlet",
+  "block.cursed.apr_plating": "APR Plating",
+  "block.cursed.apr_plating_dark": "APR Dark Plating",
+  "block.cursed.apr_mechanical": "APR Mechanical Parts",
+  "block.cursed.apr_coil": "APR Hadron Coil",
+  "block.cursed.apr_support": "APR Support Beam",
+  "block.cursed.apr_hull": "APR Hull",
+  "block.cursed.apr_hull_assembled": "APR Hull (Assembled)",
+  "block.cursed.apr_blades": "APR Blades",
+  "block.cursed.lftr_element": "LFTR Fuel Element",
+  "block.cursed.lftr_control": "LFTR Control Rod Drive",
+  "block.cursed.lftr_extension": "LFTR Control Rod Extension"
 }
