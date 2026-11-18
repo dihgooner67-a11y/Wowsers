@@ -1,0 +1,4 @@
+{
+  "crucifix": { "sounds": [ "cursed:crucifix" ] },
+  "crucifix_fail": { "sounds": [ "cursed:crucifix_fail" ] }
+}
