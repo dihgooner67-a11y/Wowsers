@@ -20,6 +20,18 @@ public final class CursedItems {
     public static final RegistryObject<LCELens> FOCUS_SAFE    = ITEMS.register("ams_focus_safe",    () -> new LCELens(5_000_000_000L, 8.0f, 4.5f,  0.1f,  one()));
 
     /** Behaviour (throw into a collapsing DFC) arrives with the jammer/collapse logic; for now plain items. */
+    /** The empty rod that fuel billets are combined with to make addon rods. */
+    public static final RegistryObject<Item> ROD_EMPTY = ITEMS.register("rod_empty", () -> new Item(new Item.Properties()));
+
+    /** APR fuel: right-click the assembled APR core with it to add 1000 particles (you get an empty particle container back). */
+    public static final RegistryObject<Item> PARTICLE_ABSORPTION = ITEMS.register("particle_absorption", () -> new Item(new Item.Properties().stacksTo(16)));
+
+    /** A charged particle capsule: holds 1000 APR particles (made from hbm:particle_empty). */
+    public static final RegistryObject<Item> PARTICLE_ABSORPTION = ITEMS.register("particle_absorption", () -> new Item(new Item.Properties()));
+
+    /** Creative tool: cycles DFC crystal colour presets. */
+    public static final RegistryObject<Item> DFC_TUNER = ITEMS.register("dfc_tuner", com.leafia.cursed.item.DfcTunerItem::new);
+
     public static final RegistryObject<Item> CRUCIFIX = ITEMS.register("crucifix", () -> new Item(one()));
     public static final RegistryObject<Item> FIX_TOOL = ITEMS.register("fix_tool", () -> new Item(one()));
 }

@@ -18,6 +18,8 @@ import com.leafia.cursed.dfc.BeamContext;
 import com.leafia.cursed.dfc.DfcCoreSim;
 import com.leafia.cursed.dfc.DfcTuning;
 import com.leafia.cursed.dfc.IDfcCore;
+import com.leafia.cursed.dfc.IDfcLook;
+import com.leafia.cursed.dfc.PlasmaShards;
 import com.leafia.cursed.dfc.IDfcReceiver;
 import dev.golem.core.data.DataIn;
 import dev.golem.core.data.DataOut;
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -56,7 +60,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * crucifix / fix tool handling, driven through Continuum's TileEntityCore.
  */
 @Mixin(value = TileEntityCore.class, remap = false)
-public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCore {
+public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCore, IDfcLook {
     @Shadow public int field;
     @Shadow public int heat;
     @Shadow public boolean meltdownTick;
@@ -78,6 +82,10 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
     @Unique private double cursed$explosionIn = -1.0;
     @Unique private double cursed$collapsing;
     @Unique private boolean cursed$finalPhase;
+    // look (synced to clients, saved): colour mode, two colours, crystal on/off, crack amount
+    @Unique private int cursed$colorMode = IDfcLook.MODE_DEFAULT, cursed$colorA = 0xFF4040, cursed$colorB = 0x4080FF;
+    @Unique private boolean cursed$crystal = true;
+    @Unique private float cursed$crack;
 
     protected CoreMixin(BlockEntityType<?> type, BlockPos pos, BlockState state, int slots) {
         super(type, pos, state, slots);
@@ -123,6 +131,7 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
             cursed$incomingSpk = 0;
             cursed$resetInputs();
             cursed$resetCollapse();
+            cursed$crack = 0.0f;
             heat = 0;
             return;
         }
@@ -173,6 +182,8 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
 
         // ---- overload -> (jammer?) collapse -> explosion ----
         boolean overload = ((out.damageA >= 100.0 || out.damageB >= 100.0) && sim.temperature > 100.0) || cursed$finalPhase;
+        cursed$crack = cursed$finalPhase ? 1.0f : overload
+            ? (float) Math.max(cursed$overloadTimer / (double) DfcTuning.OVERLOAD_TICKS, cursed$collapsing) : 0.0f;
         if (overload) {
             if (cursed$handleOverload(level)) return; // core destroyed
         } else if (cursed$explosionIn >= 0.0) {
@@ -285,6 +296,7 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
         EntityNukeExplosionMK5 explosion = EntityNukeExplosionMK5.statFacNoRad(level, size, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
         if (level.addFreshEntity(explosion)) explosion.startChunkLoading();
         level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 100000.0f, 1.0f);
+        if (cursed$crystal && level instanceof ServerLevel sl) PlasmaShards.shatter(sl, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 160);
         EntityType<? extends EntityCloudFleijaRainbow> type = (EntityType) ModNtmEntities.CLOUD_RAINBOW.get();
         EntityCloudFleijaRainbow cloud = new EntityCloudFleijaRainbow(type, level);
         cloud.setMaxAge(size);
@@ -359,13 +371,49 @@ public abstract class CoreMixin extends TileEntityMachineBase implements IDfcCor
     private void cursed$save(DataOut output, CallbackInfo ci) {
         output.putInt("cursedTemp", (int) cursed$sim().temperature);
         output.putInt("cursedEnergy", (int) cursed$sim().containedEnergy);
+        output.putInt("cursedLookMode", cursed$colorMode);
+        output.putInt("cursedLookA", cursed$colorA);
+        output.putInt("cursedLookB", cursed$colorB);
+        output.putInt("cursedCrystal", cursed$crystal ? 1 : 0);
     }
 
     @Inject(method = "loadData", at = @At("TAIL"))
     private void cursed$load(DataIn input, CallbackInfo ci) {
         cursed$sim().temperature = input.getIntOr("cursedTemp", 0);
         cursed$sim().containedEnergy = input.getIntOr("cursedEnergy", 0);
+        cursed$colorMode = input.getIntOr("cursedLookMode", IDfcLook.MODE_DEFAULT);
+        cursed$colorA = input.getIntOr("cursedLookA", 0xFF4040);
+        cursed$colorB = input.getIntOr("cursedLookB", 0x4080FF);
+        cursed$crystal = input.getIntOr("cursedCrystal", 1) == 1;
     }
+
+    // ---- client sync (Continuum already sends the core every tick; we append our look to it) ----
+    @Inject(method = "serialize", at = @At("TAIL"))
+    private void cursed$serialize(FriendlyByteBuf buf, CallbackInfo ci) {
+        buf.writeInt(cursed$colorMode);
+        buf.writeInt(cursed$colorA);
+        buf.writeInt(cursed$colorB);
+        buf.writeBoolean(cursed$crystal);
+        buf.writeFloat(cursed$crack);
+    }
+
+    @Inject(method = "deserialize", at = @At("TAIL"))
+    private void cursed$deserialize(FriendlyByteBuf buf, CallbackInfo ci) {
+        cursed$colorMode = buf.readInt();
+        cursed$colorA = buf.readInt();
+        cursed$colorB = buf.readInt();
+        cursed$crystal = buf.readBoolean();
+        cursed$crack = buf.readFloat();
+    }
+
+    // ---- IDfcLook ----
+    @Override public int cursed$getColorMode() { return cursed$colorMode; }
+    @Override public int cursed$getColorA() { return cursed$colorA; }
+    @Override public int cursed$getColorB() { return cursed$colorB; }
+    @Override public boolean cursed$isCrystal() { return cursed$crystal; }
+    @Override public float cursed$getCrack() { return cursed$crack; }
+    @Override public void cursed$setLook(int mode, int a, int b) { cursed$colorMode = mode; cursed$colorA = a & 0xFFFFFF; cursed$colorB = b & 0xFFFFFF; setChanged(); }
+    @Override public void cursed$setCrystal(boolean crystal) { cursed$crystal = crystal; setChanged(); }
 
     // ---- IDfcCore ----
     @Override public void cursed$addAbsorber(TileEntityCoreReceiver r) { if (!cursed$absorbers.contains(r)) cursed$absorbers.add(r); }

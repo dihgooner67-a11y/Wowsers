@@ -20,5 +20,7 @@ public final class CursedTabs {
             RodItems.ITEMS.getEntries().forEach(o -> out.accept(o.get()));
             com.leafia.cursed.apr.AprBlocks.ITEMS.getEntries().forEach(o -> out.accept(o.get()));
             com.leafia.cursed.lftr.LftrBlocks.ITEMS.getEntries().forEach(o -> out.accept(o.get()));
+            com.leafia.cursed.heat.HeatBlocks.ITEMS.getEntries().forEach(o -> out.accept(o.get()));
+            com.leafia.cursed.wind.WindBlocks.ITEMS.getEntries().forEach(o -> out.accept(o.get()));
         }).build());
 }

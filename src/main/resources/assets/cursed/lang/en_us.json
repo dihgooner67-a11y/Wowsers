@@ -79,5 +79,12 @@
   "block.cursed.lftr_element": "LFTR Fuel Element",
   "block.cursed.lftr_control": "LFTR Control Rod Drive",
   "block.cursed.lftr_extension": "LFTR Control Rod Extension",
-  "block.cursed.lftr_heat_exchanger": "LFTR Heat Exchanger"
+  "block.cursed.lftr_heat_exchanger": "LFTR Heat Exchanger",
+  "item.cursed.rod_empty": "Empty Fuel Rod",
+  "block.cursed.rtg_heater": "RTG Heater",
+  "block.cursed.hp_boiler": "HP Boiler",
+  "item.cursed.particle_absorption": "Particle Capsule (Charged)",
+  "item.cursed.dfc_tuner": "DFC Color Tuner",
+  "block.cursed.coolant_heatex": "Coolant Heat Exchanger",
+  "block.cursed.wind_turbine_medium": "Medium Wind Turbine"
 }

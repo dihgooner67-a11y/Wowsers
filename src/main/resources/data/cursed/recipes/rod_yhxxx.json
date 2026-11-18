@@ -1,0 +1,15 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "cursed:rod_empty"
+  },
+  {
+   "item": "hbm:billet_yharonite"
+  }
+ ],
+ "result": {
+  "item": "cursed:rod_yhxxx"
+ }
+}

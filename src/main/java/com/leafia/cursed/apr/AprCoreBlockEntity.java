@@ -12,13 +12,27 @@ import com.hbm.tileentity.TilePort;
 import com.hbm.tileentity.TilePortShapes;
 import dev.golem.core.data.DataIn;
 import dev.golem.core.data.DataOut;
+import com.hbm.items.machine.IItemFluidId;
+import com.leafia.cursed.CursedItems;
+import com.leafia.cursed.item.RodItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import com.leafia.cursed.CursedItems;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -96,24 +110,79 @@ public class AprCoreBlockEntity extends TileEntityMachineBase implements IEnergy
         return "Chambers set to " + radii + ". Build the structure (see /cursed apr structure), then /cursed apr assemble.";
     }
 
-    public String setCoolant(String name) {
-        FluidType t = Fluids.fromName(name.toUpperCase());
-        if (!AprFluids.isValid(t)) return "'" + name + "' is not a usable coolant (it needs a cooling conversion, like a hot fluid that cools into another).";
+    public String setCoolant(String name) { return setCoolantType(Fluids.fromName(name.toUpperCase()), name); }
+
+    public String setCoolantType(FluidType t, String label) {
+        if (!AprFluids.isValid(t)) return "'" + label + "' is not a usable coolant (it needs a cooling conversion, like a hot fluid that cools into another).";
         if (!assembled) return "Assemble the reactor first.";
         setupMainTank(t);
         setChanged();
         return "Main coolant set to " + t.getName() + " -> " + AprFluids.conversion(t).getName() + ".";
     }
 
-    public String setChamberFluid(int index, String name) {
+    public String setChamberFluid(int index, String name) { return setChamberType(index, Fluids.fromName(name.toUpperCase()), name); }
+
+    public String setChamberType(int index, FluidType t, String label) {
         if (!assembled || index < 1 || index > radii.size()) return "Chamber " + index + " does not exist (assembled chambers: " + (assembled ? radii.size() : 0) + ").";
-        FluidType t = Fluids.fromName(name.toUpperCase());
-        if (!AprFluids.isValid(t)) return "'" + name + "' cannot be processed in a chamber.";
+        if (!AprFluids.isValid(t)) return "'" + label + "' cannot be processed in a chamber.";
         int cap = AprStructure.capacity(radii.get(index - 1));
         chIn[index - 1] = new FluidTankNTM(t, cap);
         chOut[index - 1] = new FluidTankNTM(AprFluids.finalConversion(t), cap);
         setChanged();
         return "Chamber " + index + " now processes " + t.getName() + " into " + AprFluids.finalConversion(t).getName() + ".";
+    }
+
+    // ----------------------------------------------------------------- items
+
+    private int nextChamber = 1;
+
+    private static Item hbm(String path) { return ForgeRegistries.ITEMS.getValue(new ResourceLocation("hbm", path)); }
+
+    private static void give(Player p, Item item, int count) {
+        if (item == null || count <= 0) return;
+        ItemStack out = new ItemStack(item, count);
+        if (!p.getInventory().add(out)) p.drop(out, false);
+    }
+
+    /**
+     * Right-click handling. The APR does NOT take fuel rods: like the addon it runs on particle capsules, a coolant and
+     * chamber fluids. Charged capsule = +1000 particles (you get an empty one back); sneak + empty capsules = pull
+     * particles back out; a fluid identifier sets the main coolant (sneak: the next chamber).
+     */
+    public String useItem(Player player, ItemStack held, Level level) {
+        if (held.getItem() instanceof RodItem)
+            return "The APR does not take fuel rods: it runs on particle capsules, a coolant and chamber fluids. Rods go in the ZIRNOX, RTG Heater or RBMK.";
+        if (held.getItem() == CursedItems.PARTICLE_ABSORPTION.get()) {
+            if (!assembled) return "Assemble the reactor first (/cursed apr assemble).";
+            int space = (int) ((sim.particleCap - sim.particles) / 1000.0);
+            int n = Math.min(held.getCount(), space);
+            if (n <= 0) return "The particle chamber is full (" + (int) sim.particles + " / " + sim.particleCap + ").";
+            sim.particles += 1000.0 * n;
+            if (!player.getAbilities().instabuild) { held.shrink(n); give(player, hbm("particle_empty"), n); }
+            setChanged();
+            return "Added " + n * 1000 + " particles: " + (int) sim.particles + " / " + sim.particleCap + ".";
+        }
+        Item empty = hbm("particle_empty");
+        if (empty != null && held.getItem() == empty && player.isShiftKeyDown()) {
+            if (!assembled) return "Assemble the reactor first (/cursed apr assemble).";
+            for (AprSim.Chamber c : sim.chambers) if (c.blanketTemp > 100.0) return "The chambers are too hot to take particles out.";
+            int n = Math.min(held.getCount(), (int) (sim.particles / 1000.0));
+            if (n <= 0) return "Less than 1000 particles in the core.";
+            sim.particles -= 1000.0 * n;
+            held.shrink(n);
+            give(player, CursedItems.PARTICLE_ABSORPTION.get(), n);
+            setChanged();
+            return "Pulled out " + n * 1000 + " particles into " + n + " capsule(s).";
+        }
+        if (held.getItem() instanceof IItemFluidId id) {
+            FluidType t = id.getType(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), held);
+            if (t == null || t == Fluids.NONE) return "That fluid identifier is not set to a fluid.";
+            if (!player.isShiftKeyDown()) return setCoolantType(t, t.getName());
+            if (!assembled || radii.isEmpty()) return "Assemble the reactor first (/cursed apr assemble).";
+            if (nextChamber > radii.size()) nextChamber = 1;
+            return setChamberType(nextChamber++, t, t.getName());
+        }
+        return status();
     }
 
     // ------------------------------------------------------------ structure
@@ -242,6 +311,37 @@ public class AprCoreBlockEntity extends TileEntityMachineBase implements IEnergy
             if (level.addFreshEntity(nuke)) nuke.startChunkLoading();
             disassemble(level);
         }
+    }
+
+    // ------------------------------------------------------- particle items
+
+    private static Item emptyParticle() { return ForgeRegistries.ITEMS.getValue(new ResourceLocation("hbm", "particle_empty")); }
+
+    private static void give(Player p, ItemStack st) { if (!p.getInventory().add(st)) p.drop(st, false); }
+
+    /** Right-click handling (addon: particle item slots + the "extract particles" button). */
+    public String handleItem(Player player, ItemStack held) {
+        if (held.getItem() == CursedItems.PARTICLE_ABSORPTION.get()) {
+            if (!assembled) return "Assemble the reactor first.";
+            if (sim.particles >= sim.particleCap) return "The particle ring is full (" + (int) sim.particles + " / " + sim.particleCap + ").";
+            sim.particles = Math.min(sim.particles + 1000.0, sim.particleCap);
+            if (!player.getAbilities().instabuild) held.shrink(1);
+            Item empty = emptyParticle();
+            if (empty != null) give(player, new ItemStack(empty));
+            setChanged();
+            return "Added 1000 particles: " + (int) sim.particles + " / " + sim.particleCap + ".";
+        }
+        if (held.getItem() == emptyParticle() && held.getItem() != null) {
+            if (!assembled) return "Assemble the reactor first.";
+            for (AprSim.Chamber c : sim.chambers) if (c.blanketTemp > 100.0) return "A chamber is still too hot (" + (int) c.blanketTemp + "C). Let it cool below 100C.";
+            if (sim.particles < 1000.0) return "Not enough particles to draw out (" + (int) sim.particles + ").";
+            sim.particles -= 1000.0;
+            if (!player.getAbilities().instabuild) held.shrink(1);
+            give(player, new ItemStack(CursedItems.PARTICLE_ABSORPTION.get()));
+            setChanged();
+            return "Drew out 1000 particles: " + (int) sim.particles + " / " + sim.particleCap + " left.";
+        }
+        return status();
     }
 
     // ---------------------------------------------------------------- status

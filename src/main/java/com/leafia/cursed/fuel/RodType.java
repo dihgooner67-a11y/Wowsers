@@ -6,9 +6,11 @@ public final class RodType {
     public final double life, meltingPoint, reactivity, emission;
     public final String decayProduct; // functionId of the depleted rod, or null
     public final boolean splitIntoFast, splitWithFast, splitWithAny;
+    /** Continuum item (hbm:<name>) this rod is made from and turns back into, or null. */
+    public final String baseItem;
 
     public RodType(String label, double life, double meltingPoint, double reactivity, double emission,
-                   String decayProduct, boolean moderated, boolean preferFast, boolean preferAny) {
+                   String decayProduct, boolean moderated, boolean preferFast, boolean preferAny, String baseItem) {
         this.label = label;
         this.functionId = label.replace("-", "").replace(" ", "").toLowerCase();
         this.life = life;
@@ -19,6 +21,7 @@ public final class RodType {
         this.splitIntoFast = !moderated;
         this.splitWithFast = preferFast;
         this.splitWithAny = preferAny;
+        this.baseItem = baseItem;
     }
 
     /** Neutron flux this rod receives from a neighbour rod (addon getFlux(stack, moderated)). */

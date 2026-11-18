@@ -34,12 +34,19 @@ public class CursedMod {
         CursedSounds.SOUNDS.register(modBus);
         com.leafia.cursed.fuel.RodItems.ITEMS.register(modBus);
         CursedTabs.TABS.register(modBus);
+        com.leafia.cursed.recipe.RodUncraftRecipe.SERIALIZERS.register(modBus);
         com.leafia.cursed.apr.AprBlocks.BLOCKS.register(modBus);
         com.leafia.cursed.apr.AprBlocks.ITEMS.register(modBus);
         com.leafia.cursed.apr.AprBlocks.BLOCK_ENTITIES.register(modBus);
         com.leafia.cursed.lftr.LftrBlocks.BLOCKS.register(modBus);
         com.leafia.cursed.lftr.LftrBlocks.ITEMS.register(modBus);
         com.leafia.cursed.lftr.LftrBlocks.BLOCK_ENTITIES.register(modBus);
+        com.leafia.cursed.heat.HeatBlocks.BLOCKS.register(modBus);
+        com.leafia.cursed.heat.HeatBlocks.ITEMS.register(modBus);
+        com.leafia.cursed.heat.HeatBlocks.BLOCK_ENTITIES.register(modBus);
+        com.leafia.cursed.wind.WindBlocks.BLOCKS.register(modBus);
+        com.leafia.cursed.wind.WindBlocks.ITEMS.register(modBus);
+        com.leafia.cursed.wind.WindBlocks.BLOCK_ENTITIES.register(modBus);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -50,6 +57,9 @@ public class CursedMod {
             e.getToolTip().add(Component.literal("\u00a78Field modifier: " + pct(l.fieldMod)));
             e.getToolTip().add(Component.literal("\u00a78Power drain modifier: " + pct(l.drainMod)));
             e.getToolTip().add(Component.literal("\u00a78Energy modifier: " + pct(l.energyMod)));
+        } else if (s.getItem() == CursedItems.PARTICLE_ABSORPTION.get()) {
+            e.getToolTip().add(Component.literal("\u00a77Right-click an assembled APR core to add 1000 particles."));
+            e.getToolTip().add(Component.literal("\u00a77You get an empty particle container back."));
         } else if (s.getItem() == CursedItems.FIX_TOOL.get()) {
             e.getToolTip().add(Component.literal("\u00a77Throw this into a collapsing DFC to fix it"));
         } else if (s.getItem() == CursedItems.CRUCIFIX.get()) {
@@ -75,6 +85,11 @@ public class CursedMod {
             }))
             .then(com.leafia.cursed.apr.AprCommands.node())
             .then(com.leafia.cursed.lftr.LftrCommands.node())
+            .then(com.leafia.cursed.heat.HeatCommands.node())
+            .then(com.leafia.cursed.heat.HeatCommands.heatex())
+            .then(com.leafia.cursed.dfc.DfcCommands.node())
+            .then(com.leafia.cursed.nuke.NukeCommands.node())
+            .then(com.leafia.cursed.wind.WindCommands.node())
             .then(Commands.literal("rbmk")
                 .executes(ctx -> {
                     ServerPlayer p = ctx.getSource().getPlayerOrException();

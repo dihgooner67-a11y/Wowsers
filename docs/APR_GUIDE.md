@@ -17,7 +17,12 @@ Hadron Coil, Support Beam, Hull, Blades (Hull (Assembled) is what Hull turns int
 3. /cursed apr assemble     (Hull blocks turn into Assembled Hull). /cursed apr disassemble undoes it.
 4. Main coolant: /cursed apr coolants lists usable fluids; /cursed apr coolant <NAME> sets it.
    Chambers: /cursed apr fluid <chamber 1..n> <NAME>. Pipe the fluids to the core (it accepts any tank's fluid).
-5. Particles: /cursed apr particles <amount> (debug for now; the addon fed them from items).
+5. Items (right-click the APR Core, no GUI needed):
+   - Charged Particle Capsule: adds 1000 particles, you get an hbm:particle_empty back.
+   - Sneak + right-click with empty particle capsules: pulls 1000 particles each back out (chambers must be cool).
+   - A Fluid Identifier: sets the main coolant; sneak + right-click sets the next chamber (cycles 1..n).
+   - FUEL RODS DO NOT GO IN THE APR (neither in the addon): they belong in the ZIRNOX, RTG Heater or RBMK. Right-clicking
+     with one tells you so. /cursed apr particles <amount> still exists as a debug shortcut.
 6. Run: /cursed apr control <0-100>. /cursed apr shows rps, hull, damage, tanks, chamber temps, power.
    Power comes out of the core's sides like a DFC receiver. 110 rps starts damaging; at max damage the
    chambers blow up, and a spin past 110 rps also disassembles it with a large explosion.
